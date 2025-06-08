@@ -1,0 +1,125 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #2e2eec;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  color: white;
+  text-decoration: none;
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
+.navbar-links a,
+.navbar-links button {
+  color: white;
+  text-decoration: none;
+  margin-left: 25px;
+  font-size: 1em;
+  padding: 5px 0;
+  transition: color 0.3s ease;
+}
+
+.navbar-links a:hover,
+.navbar-links button:hover {
+  color: #61dafb;
+}
+
+.navbar-links button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit; /* Inherit font from body */
+}
+
+.logout-button {
+  color: #ff6b6b; /* Different color for logout */
+}
+
+.logout-button:hover {
+  color: #ff3b3b;
+}
+
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #61dafb;
+  transition: background-color 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(97, 218, 251, 0.15);
+}
+
+
+.nav-buttons .nav-btn {
+  margin-left: 10px;
+  padding: 8px 16px;
+  border: none;
+  background: white;
+  color: #2e2eec;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.nav-buttons .register {
+  background-color: #2e2eec;
+  color: white;
+  border: 2px solid white;
+}
+
+/* Dark Mode */
+body.dark .navbar {
+  background-color: #1e1e2f; /* darker background */
+  color: #f0f0f0;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .navbar-brand {
+  color: #f0f0f0;
+}
+
+body.dark .navbar-links a,
+body.dark .navbar-links button {
+  color: #f0f0f0;
+}
+
+body.dark .navbar-links a:hover,
+body.dark .navbar-links button:hover {
+  color: #00d8ff;
+}
+
+body.dark .logout-button {
+  color: #ff8787;
+}
+
+body.dark .logout-button:hover {
+  color: #ff5c5c;
+}
+
+body.dark .theme-toggle-btn {
+  color: #00d8ff;
+}
+
+body.dark .theme-toggle-btn:hover {
+  background-color: rgba(0, 216, 255, 0.15);
+}
+
+body.dark .nav-buttons .nav-btn {
+  background: #f0f0f0;
+  color: #1e1e2f;
+}
+
+body.dark .nav-buttons .register {
+  background-color: #1e1e2f;
+  color: #f0f0f0;
+  border: 2px solid #f0f0f0;
+}

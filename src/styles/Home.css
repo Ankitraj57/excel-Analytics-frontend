@@ -1,0 +1,52 @@
+.home-container {
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+.hero-section {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 2rem;
+  gap: 2rem;
+}
+
+.hero-left, .hero-right {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.hero-left ul {
+  list-style: none;
+  padding: 0;
+  line-height: 1.8;
+}
+
+.get-started-btn {
+  background: #3b5bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.hero-right .feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.feature-card {
+  background: #2e2eec;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+

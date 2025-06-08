@@ -1,0 +1,103 @@
+.footer {
+  background-color: #2e2eec;
+  color: white;
+  text-align: center;
+  padding: 4px 0.8rem;
+  margin-top: auto;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 0.75rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.footer p {
+  margin: 0.15rem 0;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.footer-links {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  font-size: 0.75rem;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+.footer-links a:hover {
+  opacity: 1;
+}
+
+.footer-social {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content:flex-start;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-size: 1rem;
+}
+
+.footer-social a {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.footer-social a svg {
+  width: 32px;
+  height: 32px;
+}
+
+.footer-social a:hover {
+  color: #61dafb;
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* 🌙 Dark mode */
+body.dark .footer {
+  background-color: #1e1e2f;
+  color: #ddd;
+  box-shadow: 0 -2px 4px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .footer p,
+body.dark .footer-links a,
+body.dark .footer-social a {
+  color: #ddd;
+  opacity: 0.9;
+}
+
+body.dark .footer-links a:hover,
+body.dark .footer-social a:hover {
+  color: #00d8ff;
+}
+
+/* 📱 Responsive layout */
+@media (max-width: 600px) {
+  .footer-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .footer-social {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.footer-social a svg {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  display: inline-block;
+}
