@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+Excel Analytics Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React-based frontend for the Excel Analytics Platform. It provides user authentication, file upload UI, interactive Excel data visualization, and role-based routing.
+Features
 
-## Available Scripts
+    User registration and login with JWT-based authentication
 
-In the project directory, you can run:
+    Password reset functionality with email link
 
-### `npm start`
+    Dark/light theme toggle with persistent user preference
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+    Responsive design for desktop and mobile
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    File upload with Excel (.xlsx) preview
 
-### `npm test`
+    Dynamic charts rendering using Chart.js
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    Protected routes with role-based access (user/admin)
 
-### `npm run build`
+    Toast notifications for user feedback
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Tech Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    React.js (functional components, hooks)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    Redux Toolkit for state management
 
-### `npm run eject`
+    React Router v6 for routing
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    Chart.js for data visualization
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    React Toastify for notifications
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+    CSS Modules / Custom CSS for styling
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Setup & Installation
 
-## Learn More
+    Clone the repo
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+git clone https://github.com/yourusername/excel-analytics-frontend.git
+cd excel-analytics-frontend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    Install dependencies
 
-### Code Splitting
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+    Configure environment variables
 
-### Analyzing the Bundle Size
+Create a .env file in the root directory (if needed) with variables like API URL:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+REACT_APP_API_URL=http://localhost:5000/api
 
-### Making a Progressive Web App
+    Start the development server
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+npm start
 
-### Advanced Configuration
+The app will be available at http://localhost:3000.
+Folder Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+/src
+  /components     - Shared components (Navbar, Footer, ProtectedRoute, etc.)
+  /features       - Redux slices and async thunks
+  /pages          - Page components (Login, Register, Dashboard, Upload, etc.)
+  /services       - API calls and utilities
+  /styles         - CSS files
+  App.js          - Main app and routing setup
+  index.js        - Entry point
 
-### Deployment
+Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+    Register a new account or login with existing credentials.
 
-### `npm run build` fails to minify
+    Upload Excel files on the upload page to visualize data as charts.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    Switch between dark and light mode with the toggle in the Navbar.
+
+    Admin users can access admin-specific pages.
+
+    Reset your password via the forgot password link on login.
+
+Notes
+
+    Ensure the backend API is running and accessible at the configured URL.
+
+    For production, build the app using:
+
+npm run build
+
+    Customize API URLs and other configs via environment variables.
