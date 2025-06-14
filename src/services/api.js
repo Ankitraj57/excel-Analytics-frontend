@@ -25,9 +25,11 @@ api.interceptors.request.use(
 export const login = ({ email, password }) => api.post('/auth/login', { email, password });
 export const register = ({ name, email, password, role }) => api.post('/auth/register', { name, email, password, role });
 export const forgotPassword = ({ email }) => api.post('/auth/forgot-password', { email });
+export const getAdminUsers = () => api.get('/admin/users');
+export const deleteUser = (userId) => api.delete(`/admin/users/${userId}`);
+export const deleteUpload = (uploadId) => api.delete(`/admin/uploads/${uploadId}`);
 
 // Protected APIs
-export const getDashboardData = () => api.get('/dashboard');
-export const getAdminData = () => api.get('/admin');
+export const getAdminData = () => api.get('/admin/data');
 
 export default api;

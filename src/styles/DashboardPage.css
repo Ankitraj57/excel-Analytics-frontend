@@ -1,0 +1,229 @@
+:root {
+  --bg-main: #f4f6f8;
+  --bg-card: #ffffff;
+  --text-color: #111;
+  --accent-start: #4facfe;
+  --accent-end: #00f2fe;
+  --error-bg: #ffe5e5;
+  --error-color: #e63946;
+  --border-color: #e0e0e0;
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-strong: rgba(0, 0, 0, 0.1);
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body.dark {
+  --bg-main: #121212;
+  --bg-card: #1e1e1e;
+  --text-color: #e0e0e0;
+  --accent-start: #00f2fe;
+  --accent-end: #4facfe;
+  --error-bg: #2b1b1b;
+  --error-color: #ff6b6b;
+  --border-color: #333;
+  --shadow-light: rgba(255, 255, 255, 0.05);
+  --shadow-strong: rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 250px;
+  background-color: var(--bg-card);
+  box-shadow: 2px 0 12px var(--shadow-light);
+  padding: 2rem 1.5rem;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  z-index: 1;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 3rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  transition: padding 0.3s ease;
+}
+
+/* Welcome Message Styling */
+.welcome-message {
+  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  color: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px var(--shadow-strong);
+  animation: fadeIn 0.5s ease-in-out;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+.welcome-message h2 {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.welcome-message p {
+  font-size: 1.1rem;
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* Error Message */
+.error-message {
+  color: var(--error-color);
+  background-color: var(--error-bg);
+  padding: 1rem 1.25rem;
+  border-left: 6px solid var(--error-color);
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 1px 6px var(--shadow-light);
+  user-select: none;
+}
+
+/* Analytics Preview Box */
+.data-preview {
+  background-color: var(--bg-card);
+  padding: 1.75rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px var(--shadow-light);
+  overflow-x: auto;
+  max-height: 420px;
+  font-family: monospace;
+  font-size: 1rem;
+  color: var(--text-color);
+  white-space: pre-wrap;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Layout */
+@media (max-width: 992px) {
+  .main-content {
+    padding: 2rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: none;
+    padding: 1.5rem 1rem;
+  }
+
+  .main-content {
+    padding: 1.5rem 1.5rem;
+  }
+}
+
+.user-profile,
+.upload-summary,
+.chart-area,
+.recent-uploads {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recent-uploads h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.uploads-list {
+  margin-top: 1rem;
+}
+
+.upload-item {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: flex-start;
+}
+
+.upload-item:last-child {
+  border-bottom: none;
+}
+
+.upload-details {
+  flex: 1;
+}
+
+.upload-details h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.upload-date {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.upload-size {
+  color: #3498db;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.no-uploads {
+  text-align: center;
+  padding: 2rem;
+  color: #7f8c8d;
+}
+
+body.dark .user-profile,
+body.dark .upload-summary,
+body.dark .chart-area,
+body.dark .recent-uploads {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+.user-profile ul,
+.recent-uploads ul {
+  padding-left: 1.2rem;
+}
+
+.recent-uploads li {
+  margin-bottom: 0.5rem;
+}

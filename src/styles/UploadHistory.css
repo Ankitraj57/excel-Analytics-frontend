@@ -1,0 +1,175 @@
+/* UploadHistory.css - Box Layout Design */
+
+.upload-history {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.history-header {
+  margin-bottom: 2rem;
+}
+
+.history-header h2 {
+  color: var(--primary-color);
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+}
+
+.loading {
+  color: var(--primary-color);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.error {
+  color: #e53e3e;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.no-uploads {
+  text-align: center;
+  padding: 2rem;
+  background: var(--bg-light);
+  border-radius: 12px;
+  margin: 2rem 0;
+}
+
+.no-uploads h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.no-uploads p {
+  color: var(--text-secondary);
+}
+
+.upload-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.upload-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.upload-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.upload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.upload-header h3 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.upload-date {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.upload-content {
+  margin-bottom: 1rem;
+}
+
+.data-preview {
+  margin: 0.5rem 0;
+}
+
+.data-preview summary {
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: var(--bg-light);
+}
+
+.data-preview pre {
+  background: var(--bg-light);
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.upload-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.delete-btn {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #c53030;
+  transform: translateY(-1px);
+}
+
+.delete-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Dark Mode */
+body.dark .upload-card {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-dark);
+}
+
+body.dark .upload-header h3,
+body.dark .upload-date {
+  color: var(--text-light);
+}
+
+body.dark .data-preview summary {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark .data-preview pre {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .upload-history {
+    padding: 1rem;
+  }
+
+  .upload-list {
+    grid-template-columns: 1fr;
+  }
+
+  .upload-card {
+    padding: 1rem;
+  }
+
+  .upload-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .upload-date {
+    font-size: 0.85rem;
+  }
+}

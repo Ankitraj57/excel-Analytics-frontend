@@ -1,21 +1,28 @@
+/* 🌐 Base Reset */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
   background-color: #f4f7f6;
-  color: #333;
+  color: #222;
+  line-height: 1.6;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
+/* 🌙 Dark Mode */
 body.dark {
-  background-color: #1e1e1e;
+  background-color: #121212;
   color: #f0f0f0;
 }
 
+/* 📦 App Container Layout */
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
+/* 📄 Content Area */
 .content {
   flex-grow: 1;
   padding: 20px;
@@ -24,80 +31,112 @@ body.dark {
   width: 100%;
 }
 
+/* 🧱 Page Wrapper */
 .page-content {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-body.dark {
-  background-color: #121212;
-  color: #eee;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: background-color 0.3s ease;
 }
 
+body.dark .page-content {
+  background-color: #1e1e2f;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.05);
+}
+
+/* 🔐 Auth Form Container */
 body.dark .form-container {
-  background-color: #1e1e1e;
-  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+  background-color: #1c1c2c;
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.06);
+}
+
+/* ✏️ Input & Select Fields */
+input,
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
 }
 
 body.dark input,
 body.dark select {
-  background-color: #333;
-  border-color: #555;
-  color: #eee;
+  background-color: #2a2a3a;
+  border-color: #444;
+  color: #e0e0e0;
 }
 
 body.dark input:focus,
 body.dark select:focus {
-  border-color: #61dafb;
-  box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.4);
+  border-color: #00e5ff;
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.3);
+}
+
+/* 🔘 Auth Form Button */
+.auth-form button {
+  background-color: #067c59;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form button:hover {
+  background-color: #055f45;
 }
 
 body.dark .auth-form button {
-  background-color: #61dafb;
-  color: #282c34;
+  background-color: #00e5ff;
+  color: #121212;
+  box-shadow: 0 4px 12px rgba(0, 229, 255, 0.3);
 }
 
 body.dark .auth-form button:hover {
-  background-color: #4fa3d1;
+  background-color: #00bfa6;
 }
 
-/* Common toast styles */
+/* 🔔 Toast Styles (Toastify) */
 .Toastify__toast {
-  border-radius: 8px;
+  border-radius: 10px;
   font-weight: 600;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  padding: 16px 24px;
   font-size: 1rem;
+  padding: 16px 20px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.4px;
 }
 
-/* Success Toast */
 .Toastify__toast--success {
   background: #4caf50;
-  color: white;
+  color: #fff;
 }
 
-/* Error Toast */
 .Toastify__toast--error {
   background: #f44336;
-  color: white;
+  color: #fff;
 }
 
-/* Info Toast */
 .Toastify__toast--info {
   background: #2196f3;
-  color: white;
+  color: #fff;
 }
 
-/* Warning Toast */
 .Toastify__toast--warning {
   background: #ff9800;
-  color: white;
+  color: #fff;
 }
 
-/* Dark mode overrides */
+/* 🌙 Toasts in Dark Mode */
 body.dark .Toastify__toast {
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
 }
 
 body.dark .Toastify__toast--success {
@@ -114,4 +153,19 @@ body.dark .Toastify__toast--info {
 
 body.dark .Toastify__toast--warning {
   background: #ef6c00;
+}
+
+/* 📱 Responsive Enhancements */
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+  }
+
+  .page-content {
+    padding: 1.5rem;
+  }
+
+  .auth-form button {
+    width: 100%;
+  }
 }

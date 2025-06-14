@@ -1,14 +1,18 @@
 :root {
   --primary: #61dafb;
-  --text-dark: #282c34;
-  --text-light: #eee;
+  --primary-hover: #21a1f1;
+  --text-dark: #1e1e1e;
+  --text-light: #f2f2f2;
   --bg-light: #ffffff;
-  --bg-dark: #1f1f1f;
+  --bg-dark: #121212;
   --error: #ff4d4f;
   --success: #4caf50;
   --transition: all 0.3s ease-in-out;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-dark: rgba(255, 255, 255, 0.08);
 }
 
+/* Themes */
 body.light {
   background-color: var(--bg-light);
   color: var(--text-dark);
@@ -19,92 +23,127 @@ body.dark {
   color: var(--text-light);
 }
 
+/* Form Container */
 .form-container {
   background-color: var(--bg-light);
   color: var(--text-dark);
-  max-width: 450px;
-  margin: 60px auto;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  max-width: 460px;
+  margin: 64px auto;
+  padding: 48px 40px;
+  border-radius: 16px;
+  box-shadow: 0 12px 35px var(--shadow-light);
   transition: var(--transition);
 }
 
 body.dark .form-container {
-  background-color: #2c2c2c;
+  background-color: #222;
   color: var(--text-light);
+  box-shadow: 0 12px 35px var(--shadow-dark);
 }
 
+/* Headings */
 h2 {
-  margin-bottom: 25px;
-  font-size: 2rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 32px;
   text-align: center;
+  letter-spacing: 0.03em;
+  user-select: none;
 }
 
+/* Form Layout */
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
+/* Form Groups */
 .form-group {
   display: flex;
   flex-direction: column;
 }
 
+/* Inputs and Selects */
 .auth-form input,
 .auth-form select {
-  padding: 10px 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1.8px solid #ccc;
   font-size: 1rem;
+  background-color: transparent;
+  color: inherit;
   transition: var(--transition);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.auth-form input::placeholder,
+.auth-form select::placeholder {
+  color: #aaa;
 }
 
 .auth-form input:focus,
 .auth-form select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.3);
+  box-shadow: 0 0 8px 4px rgba(97, 218, 251, 0.3);
 }
 
+/* Buttons */
 .auth-form button {
-  padding: 12px;
+  padding: 16px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
   border: none;
-  border-radius: 6px;
-  font-weight: bold;
+  border-radius: 12px;
   background-color: var(--primary);
   color: var(--text-dark);
   cursor: pointer;
+  box-shadow: 0 8px 18px rgba(97, 218, 251, 0.35);
   transition: var(--transition);
 }
 
-.auth-form button:hover {
-  background-color: #21a1f1;
+.auth-form button:hover,
+.auth-form button:focus-visible {
+  background-color: var(--primary-hover);
+  box-shadow: 0 10px 24px rgba(33, 161, 241, 0.6);
+  outline: none;
 }
 
-.auth-form .error-message,
-.auth-form .success-message {
-  padding: 10px;
-  border-radius: 5px;
+.auth-form button:disabled {
+  background-color: #aee5fc;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+/* Error & Success Messages */
+.error-message,
+.success-message {
+  padding: 14px 18px;
+  border-radius: 8px;
   font-size: 0.95em;
-  animation: fadeIn 0.4s ease;
+  animation: fadeIn 0.4s ease forwards;
 }
 
 .error-message {
   background-color: var(--error);
-  color: white;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.6);
 }
 
 .success-message {
   background-color: var(--success);
-  color: white;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.6);
 }
 
+/* Fade In Animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -112,133 +151,165 @@ h2 {
   }
 }
 
+/* Toggle Theme */
 .toggle-theme {
-  margin-top: 15px;
+  margin-top: 22px;
   text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--primary);
   cursor: pointer;
-  font-weight: bold;
-  font-size: 0.9rem;
+  transition: var(--transition);
 }
 
-@media (max-width: 480px) {
-  .form-container {
-    margin: 20px;
-    padding: 25px;
-  }
-  h2 {
-    font-size: 1.5rem;
-  }
+.toggle-theme:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
 }
 
-.toggle-password {
-  cursor: pointer;
-  user-select: none;
-  margin-left: 8px;
-  font-size: 1.2rem;
-  color: #666;
-  transition: color 0.3s ease, transform 0.2s ease, opacity 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  opacity: 1;
-  transform-origin: center;
-}
-
-.toggle-password:hover,
-.toggle-password:focus {
-  color: #007bff;
-  outline: none;
-  text-shadow: 0 0 3px rgba(0,123,255,0.7);
-  opacity: 1;
-  transform: scale(1.2);
-}
-
-.toggle-password:active {
-  transform: scale(0.9);
-}
-
+/* Password Toggle */
 .password-toggle-wrapper {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
-
-.fade-in {
-  animation: fadeIn 0.6s ease-in-out both;
+.toggle-password {
+  margin-left: 10px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #777;
+  transition: var(--transition);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.toggle-password:hover {
+  color: var(--primary);
+  transform: scale(1.2);
 }
 
+/* Spinner */
 .spinner {
   display: inline-block;
   width: 18px;
   height: 18px;
-  border: 3px solid rgba(0,0,0,0.2);
-  border-top-color: rgba(0,0,0,0.6);
+  border: 3px solid rgba(0, 0, 0, 0.2);
+  border-top-color: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  vertical-align: middle;
+}
+
+body.dark .spinner {
+  border-color: rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.6);
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
+/* Modal Overlay */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 2000;
 }
 
+/* Modal Content */
 .modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  background: var(--bg-light);
+  color: var(--text-dark);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 440px;
+  border-radius: 16px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
+  transition: var(--transition);
 }
 
+body.dark .modal-content {
+  background: #2c2c2c;
+  color: var(--text-light);
+  box-shadow: 0 14px 34px var(--shadow-dark);
+}
+
+/* Modal Heading */
 .modal-content h3 {
-  margin-bottom: 1rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 1.4rem;
 }
 
+/* Modal Inputs */
 .modal-content input {
   width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
+  padding: 13px 16px;
   font-size: 1rem;
+  border-radius: 10px;
+  border: 1.8px solid #ccc;
+  margin-bottom: 1.5rem;
+  background-color: transparent;
+  color: inherit;
+  transition: var(--transition);
 }
 
+.modal-content input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 8px 3px rgba(97, 218, 251, 0.4);
+  outline: none;
+}
+
+/* Modal Buttons */
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .modal-buttons button {
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.3rem;
   font-size: 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
   cursor: pointer;
+  background-color: var(--primary);
+  color: var(--text-dark);
+  box-shadow: 0 8px 18px rgba(97, 218, 251, 0.45);
+  transition: var(--transition);
+}
+
+.modal-buttons button:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 10px 26px rgba(33, 161, 241, 0.65);
 }
 
 .modal-buttons button[disabled] {
-  opacity: 0.6;
+  background-color: #aee5fc;
   cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.6;
 }
 
+/* Responsive Tweaks */
+@media (max-width: 500px) {
+  .form-container {
+    padding: 32px 24px;
+    margin: 30px 16px;
+  }
+
+  h2 {
+    font-size: 1.7rem;
+  }
+
+  .auth-form button,
+  .modal-buttons button {
+    width: 100%;
+  }
+}

@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { loginUser, forgotPassword, clearError, clearSuccess } from '../features/auth/authSlice';
+import {
+  loginUser,
+  forgotPassword,
+  clearError,
+  clearSuccess,
+} from '../features/auth/authSlice';
 import '../styles/Form.css';
 
 const Login = () => {
@@ -12,47 +17,61 @@ const Login = () => {
   const [forgotEmail, setForgotEmail] = useState('');
   const [showForgot, setShowForgot] = useState(false);
   const [forgotLoading, setForgotLoading] = useState(false);
-  
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, error, success, isAuthenticated, role } = useSelector(state => state.auth);
-  
+  const { loading, error, success, isAuthenticated, role } = useSelector(
+    (state) => state.auth
+  );
+
+  const redirected = useRef(false);
+
   useEffect(() => {
-    // Redirect if already authenticated
-    if (isAuthenticated) {
-      navigate(role === 'admin' ? '/admin' : '/dashboard');
+    if (isAuthenticated && !redirected.current) {
+      redirected.current = true;
+      const destination = role === 'admin' ? '/admin' : '/dashboard';
+      navigate(destination);
     }
-    
-    // Clear any previous errors or success messages when component mounts
+  }, [isAuthenticated, role, navigate]);
+
+  useEffect(() => {
     dispatch(clearError());
     dispatch(clearSuccess());
-  }, [isAuthenticated, navigate, role, dispatch]);
-  
+  }, [dispatch]);
+
   useEffect(() => {
-    // Show toast messages for errors or success
     if (error) {
       toast.error(error);
       dispatch(clearError());
     }
-    
+
     if (success) {
       toast.success('Login successful!');
       dispatch(clearSuccess());
     }
   }, [error, success, dispatch]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    if (!email || !password) {
+      toast.warn('Please enter both email and password.');
+      return;
+    }
     dispatch(loginUser({ email, password }));
   };
 
   const handleForgotSubmit = async (e) => {
     e.preventDefault();
+    if (!forgotEmail) {
+      toast.warn('Please enter your registered email.');
+      return;
+    }
     setForgotLoading(true);
     try {
       await dispatch(forgotPassword(forgotEmail)).unwrap();
       toast.success('Password reset email sent!');
       setShowForgot(false);
+      setForgotEmail('');
     } catch (err) {
       toast.error('Failed to send reset email. Try again.');
     } finally {
@@ -61,17 +80,18 @@ const Login = () => {
   };
 
   return (
-    <div className="form-container fade-in" style={{ marginBlock: "5rem" }}>
+    <div className="form-container fade-in" style={{ marginBlock: '5rem' }}>
       <h2>Login</h2>
       <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-group">
           <label htmlFor="email">Email</label>
-          <input 
-            id="email" 
-            type="email" 
-            value={email} 
-            onChange={e => setEmail(e.target.value)} 
-            required 
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
           />
         </div>
         <div className="form-group">
@@ -81,16 +101,19 @@ const Login = () => {
               id="password"
               type={showPassword ? 'text' : 'password'}
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
             />
-            <span 
-              onClick={() => setShowPassword(!showPassword)} 
+            <span
+              onClick={() => setShowPassword(!showPassword)}
               className="toggle-password"
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') setShowPassword(!showPassword); }}
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') setShowPassword(!showPassword);
+              }}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? '🙈' : '👁️'}
             </span>
@@ -101,17 +124,22 @@ const Login = () => {
         </button>
       </form>
 
-      <p className="forgot-password" onClick={() => setShowForgot(true)} style={{ cursor: 'pointer', color: '#007bff' }}>
+      <p
+        className="forgot-password"
+        onClick={() => setShowForgot(true)}
+        style={{ cursor: 'pointer', color: '#007bff' }}
+      >
         Forgot Password?
       </p>
 
-      <p>Don't have an account? <Link to="/register">Register here</Link></p>
+      <p>
+        Don't have an account? <Link to="/register">Register here</Link>
+      </p>
 
-      {/* Forgot Password Modal */}
       {showForgot && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3 style={{ color: "Green" }}>Reset Password</h3>
+            <h3 style={{ color: 'green' }}>Reset Password</h3>
             <form onSubmit={handleForgotSubmit}>
               <input
                 type="email"
@@ -124,7 +152,9 @@ const Login = () => {
                 <button type="submit" disabled={forgotLoading}>
                   {forgotLoading ? 'Sending...' : 'Send Reset Link'}
                 </button>
-                <button type="button" onClick={() => setShowForgot(false)}>Cancel</button>
+                <button type="button" onClick={() => setShowForgot(false)}>
+                  Cancel
+                </button>
               </div>
             </form>
           </div>

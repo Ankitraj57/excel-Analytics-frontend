@@ -1,0 +1,311 @@
+.upload-container {
+  max-width: 900px;
+  margin: 1.5rem auto;
+  padding: 1.5rem 2.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+  /* For dark mode support */
+  background-color: var(--bg-color, #fff);
+  color: var(--text-color, #333);
+}
+
+.upload-container h3 {
+  text-align: center;
+  margin-bottom: 1.2rem;
+  color: inherit; /* Uses current container text color */
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.upload-box {
+  border: 2.5px dashed #bbb;
+  border-radius: 14px;
+  padding: 2.5rem;
+  text-align: center;
+  cursor: pointer;
+  color: #777;
+  transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+  position: relative;
+  background-color: #fafafa;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.02);
+}
+
+.upload-box:hover,
+.upload-box:focus-within {
+  border-color: #4285f4;
+  color: #4285f4;
+  background-color: #f0f7ff;
+  outline: none;
+}
+
+.upload-box input[type='file'] {
+  display: none;
+}
+
+.upload-box label {
+  font-weight: 600;
+  font-size: 1.15rem;
+  user-select: none;
+  transition: color 0.3s ease;
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  background-color: #e7f0fe;
+  color: #4285f4;
+  box-shadow: 0 2px 6px rgba(66, 133, 244, 0.3);
+  cursor: pointer;
+}
+
+.upload-box label:hover {
+  background-color: #d0e3fc;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+}
+
+.upload-message {
+  margin-top: 1.25rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-weight: 700;
+  text-align: center;
+  font-size: 1rem;
+  box-shadow: 0 0 6px rgba(0,0,0,0.05);
+  user-select: none;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.upload-message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1.5px solid #c3e6cb;
+  box-shadow: 0 0 8px #a5d6a7;
+}
+
+.upload-message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1.5px solid #f5c6cb;
+  box-shadow: 0 0 8px #f28b82;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-5px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+.preview-table {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  background-color: #fff;
+}
+
+.preview-table h4 {
+  margin-bottom: 0.85rem;
+  color: #555;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding-left: 0.5rem;
+}
+
+.preview-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  user-select: text;
+}
+
+.preview-table th,
+.preview-table td {
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  text-align: left;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.preview-table th {
+  background-color: #f9f9f9;
+  font-weight: 700;
+  color: #444;
+  letter-spacing: 0.02em;
+}
+
+.preview-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.preview-table tr:hover {
+  background-color: #dbefff;
+}
+
+.upload-container label {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--text-color, #333);
+  user-select: none;
+}
+
+.upload-container select {
+  padding: 7px 14px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.8px solid #ccc;
+  margin-left: 0.75rem;
+  min-width: 140px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #fff;
+  color: #333;
+}
+
+.upload-container select:focus {
+  border-color: #4285f4;
+  outline: none;
+  box-shadow: 0 0 8px rgba(66, 133, 244, 0.6);
+}
+
+.upload-container button {
+  padding: 9px 22px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-left: 1.25rem;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+}
+
+.upload-container button:disabled {
+  background-color: #a3c0f9;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.upload-container button:hover:not(:disabled) {
+  background-color: #3367d6;
+  box-shadow: 0 6px 16px rgba(51, 103, 214, 0.6);
+}
+
+/* Responsive for small screens */
+@media (max-width: 600px) {
+  .upload-container {
+    padding: 1.2rem 1rem;
+  }
+
+  .upload-container label,
+  .upload-container select,
+  .upload-container button {
+    display: block;
+    margin: 0.5rem 0;
+    width: 100%;
+  }
+
+  .upload-container select {
+    margin-left: 0;
+  }
+
+  .upload-container button {
+    margin-left: 0;
+  }
+
+  .upload-box {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Dark Mode Support (optional, if you add a class or use CSS variables) */
+.dark-mode .upload-container {
+  background-color: #222;
+  color: #eee;
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .upload-box {
+  border-color: #666;
+  background-color: #333;
+  color: #bbb;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .upload-box:hover,
+.dark-mode .upload-box:focus-within {
+  border-color: #64aaff;
+  color: #64aaff;
+  background-color: #444;
+}
+
+.dark-mode .upload-box label {
+  background-color: #405a85;
+  color: #dce9ff;
+  box-shadow: 0 2px 6px rgba(100, 170, 255, 0.3);
+}
+
+.dark-mode .upload-box label:hover {
+  background-color: #2a4470;
+  box-shadow: 0 4px 12px rgba(100, 170, 255, 0.5);
+}
+
+.dark-mode .upload-message.success {
+  background-color: #1a3b1a;
+  color: #a3dca3;
+  border-color: #2c6f2c;
+  box-shadow: 0 0 8px #4caf50;
+}
+
+.dark-mode .upload-message.error {
+  background-color: #4a1a1a;
+  color: #f08080;
+  border-color: #7a2a2a;
+  box-shadow: 0 0 8px #f44336;
+}
+
+.dark-mode .preview-table {
+  background-color: #333;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .preview-table th,
+.dark-mode .preview-table td {
+  border-color: #555;
+  color: #ddd;
+}
+
+.dark-mode .preview-table th {
+  background-color: #444;
+}
+
+.dark-mode .preview-table tr:nth-child(even) {
+  background-color: #2d2d2d;
+}
+
+.dark-mode .preview-table tr:hover {
+  background-color: #426eb4;
+}
+
+.dark-mode .upload-container select {
+  background-color: #444;
+  border-color: #555;
+  color: #eee;
+}
+
+.dark-mode .upload-container select:focus {
+  border-color: #64aaff;
+  box-shadow: 0 0 8px rgba(100, 170, 255, 0.6);
+}
+
+.dark-mode .upload-container button {
+  background-color: #64aaff;
+  box-shadow: 0 4px 12px rgba(100, 170, 255, 0.6);
+}
+
+.dark-mode .upload-container button:hover:not(:disabled) {
+  background-color: #4185e1;
+  box-shadow: 0 6px 16px rgba(65, 133, 225, 0.8);
+}

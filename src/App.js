@@ -15,6 +15,9 @@ import AdminPage from './pages/AdminPage';
 import UnauthorizedPage from './pages/Unauthorized';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import FileUpload from './pages/FileUpload';
+import UploadHistory from './pages/UploadHistory';
+import AiSummaryPage from './pages/AiSummaryPage';
+import ProfilePage from './pages/ProfilePage';
 
 import './styles/App.css'; // Main layout styling
 
@@ -37,14 +40,18 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-          <Route path="/upload" element={<FileUpload />} />
+         
 
-          {/* Protected Routes - accessible by any logged-in user */}
-          <Route element={<ProtectedRoute />}>
+          {/* Protected Routes: accessible by any authenticated user */}
+          <Route element={<ProtectedRoute allowedRoles={['user', 'admin']} />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/history" element={<UploadHistory />} />
+            <Route path="/ai-summary" element={<AiSummaryPage />} />
+            <Route path="/upload" element={<FileUpload />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Route>
 
-          {/* Admin Protected Routes */}
+          {/* Admin only Routes */}
           <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
             <Route path="/admin" element={<AdminPage />} />
           </Route>
@@ -59,7 +66,7 @@ function App() {
       <ToastContainer
         position="top-center"
         autoClose={3000}
-        theme={isDark ? 'dark' : 'light'} // react-toastify built-in themes
+        theme={isDark ? 'dark' : 'light'}
       />
     </div>
   );
