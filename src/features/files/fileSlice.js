@@ -1,16 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { api } from '../auth/authSlice';
 
 export const fetchUploadHistory = createAsyncThunk(
   'files/fetchUploadHistory',
   async (_, { rejectWithValue }) => {
     try {
-      const jwt = localStorage.getItem('jwt');
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/files/history`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
+      const res = await api.get('/files/history');
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || 'Fetch failed');
@@ -22,10 +17,7 @@ export const deleteFileById = createAsyncThunk(
   'files/deleteFileById',
   async (fileId, { rejectWithValue }) => {
     try {
-      const jwt = localStorage.getItem('jwt');
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/files/${fileId}`, {
-        headers: { Authorization: `Bearer ${jwt}` },
-      });
+      await api.delete(`/files/${fileId}`);
       return fileId;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Delete failed');
