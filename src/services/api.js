@@ -9,10 +9,10 @@ const api = axios.create({
   },
 });
 
-// Attach JWT token from localStorage 'jwt'
+// Attach JWT token from localStorage
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('jwt');  // Use 'jwt' key
+    const token = localStorage.getItem('jwt');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,9 +27,12 @@ export const register = ({ name, email, password, role }) => api.post('/auth/reg
 export const forgotPassword = ({ email }) => api.post('/auth/forgot-password', { email });
 export const getAdminUsers = () => api.get('/admin/users');
 export const deleteUser = (userId) => api.delete(`/admin/users/${userId}`);
-export const deleteUpload = (uploadId) => api.delete(`/admin/uploads/${uploadId}`);
+export const updateUserRole = (userId, role) => api.put(`/admin/users/${userId}/role`, { role });
 
 // Protected APIs
 export const getAdminData = () => api.get('/admin/data');
+export const getUploads = () => api.get('/admin/uploads'); 
+export const getUpload = (id) => api.get(`/admin/uploads/${id}`);
+export const analyzeData = (data) => api.post('/ai-insight/analyze', { data });
 
 export default api;

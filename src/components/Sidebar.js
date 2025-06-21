@@ -59,7 +59,7 @@ const Sidebar = () => {
             <FiClock />UploadHistory
           </NavLink>
           <NavLink
-            to="/ai-summary"
+            to="/ai-insight"
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) => (isActive ? 'active-link' : '')}
           >

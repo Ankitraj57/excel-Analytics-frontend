@@ -8,7 +8,7 @@ function ProfilePage() {
   if (!isAuthenticated) {
     return (
       <div className="profile-page">
-        <h2>User Profile</h2>
+        <h2>Profile Information</h2>
         <div className="profile-card">
           <div className="profile-info">
             <p>Please log in to view your profile.</p>
@@ -20,7 +20,7 @@ function ProfilePage() {
 
   return (
     <div className="profile-page">
-      <h2>User Profile</h2>
+      <h2>Profile Information</h2>
       <div className="profile-card">
         <div className="profile-info">
           <p><strong>Name:</strong> {user.name}</p>

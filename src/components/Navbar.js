@@ -40,7 +40,7 @@ const Navbar = ({ isDark, setIsDark }) => {
           <>
             {userRole === 'admin' && <Link to="/admin">Admin Panel</Link>}
             <Link to="/dashboard">Dashboard</Link>
-            <button type="button" onClick={handleLogout} className="logout-button">Logout</button>
+            <button type="button" onClick={handleLogout} className="logout-button"></button>
           </>
         ) : (
           <>

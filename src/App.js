@@ -16,8 +16,8 @@ import UnauthorizedPage from './pages/Unauthorized';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import FileUpload from './pages/FileUpload';
 import UploadHistory from './pages/UploadHistory';
-import AiSummaryPage from './pages/AiSummaryPage';
 import ProfilePage from './pages/ProfilePage';
+import AIInsight from './pages/AIInsight';
 
 import './styles/App.css'; // Main layout styling
 
@@ -46,9 +46,10 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={['user', 'admin']} />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/history" element={<UploadHistory />} />
-            <Route path="/ai-summary" element={<AiSummaryPage />} />
             <Route path="/upload" element={<FileUpload />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/ai-insight/:fileId" element={<AIInsight />} />
+            <Route path="/ai-insight" element={<AIInsight />} />
           </Route>
 
           {/* Admin only Routes */}

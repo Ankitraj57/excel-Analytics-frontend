@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import ChartDisplay from './ChartDisplay'; 
 import ThreeDChart from '../components/ThreeDChart';
-// import UploadHistory from './UploadHistory';
 import "../styles/FileUpload.css";
+
 
 function FileUpload() {
   const [preview, setPreview] = useState([]);
@@ -275,7 +275,6 @@ setIsUploading(false);
             xKey={labelCol}
             yKey={valueCol}
             chartType={"bar3d"}/>
-        {/* <UploadHistory/> */}
         </div>
       )}
     </div>
