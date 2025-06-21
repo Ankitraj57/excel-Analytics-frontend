@@ -51,8 +51,17 @@ api.interceptors.response.use(
 // 🔓 Decode JWT helper
 function parsejwt(token) {
   try {
-    return JSON.parse(atob(token.split('.')[1]));
+    if (!token) return null;
+    const base64Url = token.split('.')[1];
+    if (!base64Url) return null;
+    
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
   } catch (e) {
+    console.error('Error parsing JWT:', e);
     return null;
   }
 }
@@ -62,7 +71,7 @@ const jwt = localStorage.getItem('jwt');
 const tokenData = jwt ? parsejwt(jwt) : null;
 
 const initialState = {
-  user: tokenData || null,
+  user: tokenData?.user || null,
   jwt: jwt,
   role: tokenData?.role || 'user', // Default to 'user' if role is not present
   isAuthenticated: Boolean(jwt),
@@ -71,6 +80,14 @@ const initialState = {
   success: false,
   tokenExpired: false,
   refreshTimer: null,
+};
+
+// Ensure role is always set when token changes
+const updateRoleFromToken = (state, token) => {
+  const tokenData = parsejwt(token);
+  if (tokenData && tokenData.role) {
+    state.role = tokenData.role;
+  }
 };
 
 // Update the setToken reducer to ensure role is always set
@@ -87,7 +104,7 @@ const authSlice = createSlice({
     setToken: (state, action) => {
       state.jwt = action.payload.jwt;
       state.user = action.payload.user;
-      state.role = action.payload.user.role || 'user'; // Ensure role is always set
+      updateRoleFromToken(state, action.payload.jwt); // Update role from token
       state.isAuthenticated = true;
       state.tokenExpired = false;
       
@@ -109,6 +126,9 @@ const authSlice = createSlice({
           }, timeUntilRefresh);
         }
       }
+    },
+    updateRole: (state, action) => {
+      state.role = action.payload;
     },
     setTokenExpired: (state) => {
       state.tokenExpired = true;
@@ -205,8 +225,17 @@ export const loginUser = createAsyncThunk(
         email: userData.email.toLowerCase(),
       });
 
-      const token = response.data.token;
+      // Try different token property names
+      const token = response.data.token || response.data.jwt || response.data.accessToken;
+      if (!token) {
+        throw new Error('No token received from server');
+      }
+
       const decodedUser = parsejwt(token);
+      if (!decodedUser) {
+        throw new Error('Failed to decode JWT token');
+      }
+
       localStorage.setItem('jwt', token);
 
       return {
@@ -214,7 +243,8 @@ export const loginUser = createAsyncThunk(
         user: decodedUser,
       };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Login failed');
+      console.error('Login error:', error);
+      return rejectWithValue(error.response?.data?.message || error.message || 'Login failed');
     }
   }
 );

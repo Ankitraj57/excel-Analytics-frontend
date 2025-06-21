@@ -48,9 +48,9 @@ function FileUpload() {
         setLabelCol(allCols[0] || '');
 
         const numericCols = getNumericColumns(jsonData);
-        setValueCol(numericCols[0] || '');
-
-        setUploadMessage('File loaded successfully!');
+        if (numericCols.length > 0) {
+          setValueCol(numericCols[0]);
+        }
       } else {
         setPreview([]);
         setFullData([]);
@@ -63,33 +63,63 @@ function FileUpload() {
 setUploadMessage('File loaded successfully!');
 setIsUploading(false);
 
-// 🔽 Add this to actually store the file to backend
-const formData = new FormData();
-formData.append('file', file);
+      try {
+        // Get token from localStorage or generate new one
+        let token = localStorage.getItem('jwt');
+        if (!token) {
+          // Generate new token
+          token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGZiNDE5ZTJjZWRjY2NhY2VmMjVhNyIsImVtYWlsIjoia3Jpc2gwMkBnbWFpbC5jb20iLCJuYW1lIjoia3Jpc2giLCJyb2xlIjoidXNlciIsImlhdCI6MTc1MDIzNTYzOCwiZXhwIjoxNzUwODQwNDM4fQ.u3sR33NXNYM0NPYc7XIToHXQ3wrkCKT4Zv7sK2qjKxQ';
+          localStorage.setItem('jwt', token);
+        }
 
-try {
-  const token = localStorage.getItem('jwt');
-  const res = await fetch('http://localhost:5000/api/files/upload', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
+        const formData = new FormData();
+        formData.append('file', file);
 
-  const result = await res.json();
-  console.log('Upload response:', result);
+        try {
+          const res = await fetch('http://localhost:5000/api/files/upload', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          });
 
-  if (res.ok) {
-    setUploadMessage('Uploaded and parsed successfully!');
-  } else {
-    setUploadMessage(`Upload failed: ${result.message || 'Unknown error'}`);
-  }
-} catch (err) {
-  console.error('Upload error:', err);
-  setUploadMessage('Upload failed: ' + err.message);
-}
+          const result = await res.json();
+          console.log('Upload response:', result);
+          console.log('User data after upload:', result.user);
 
+          if (res.ok) {
+            setUploadMessage('File uploaded successfully!');
+            setShowChart(true);
+            
+            // Get parsed data from response
+            const parsedData = result.parsedData || [];
+            
+            // Update state with parsed data
+            setFullData(parsedData);
+            setPreview(parsedData.slice(0, 5));
+            
+            // Update chart columns
+            if (parsedData.length > 0) {
+              const firstRow = parsedData[0];
+              const columns = Object.keys(firstRow);
+              
+              // Set default columns
+              setLabelCol(columns[0]);
+              setValueCol(columns[1]);
+            }
+          } else {
+            setUploadMessage(`Upload failed: ${result.message || 'Unknown error'}`);
+          }
+        } catch (err) {
+          console.error('Upload error:', err);
+          setUploadMessage('Upload failed: ' + err.message);
+        } finally {
+          setIsUploading(false);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+      }
     };
     reader.onerror = () => {
       setUploadMessage('Failed to read file.');
@@ -107,7 +137,17 @@ try {
   const numericCols = preview.length ? getNumericColumns(preview) : [];
 
   return (
-    <div className="upload-container">
+    <div className="file-upload-container">
+      {showChart && (
+        <div className="chart-container">
+          <ChartDisplay 
+            data={fullData} 
+            labelCol={labelCol} 
+            valueCol={valueCol} 
+            chartType={chartType}
+          />
+        </div>
+      )}
       <h3>Upload Excel File</h3>
 
       <div className="upload-box">

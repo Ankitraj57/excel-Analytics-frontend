@@ -32,6 +32,7 @@ const generateColors = (count) =>
 
 function ChartDisplay({ data, xKey, yKey, chartType = 'bar', title = '' }) {
   const chartRef = useRef(null);
+  console.log('ChartDisplay props:', { data, xKey, yKey, chartType });
 
   if (!data || data.length === 0 || !xKey || !yKey) {
     return <p style={{ textAlign: 'center', color: 'gray' }}>No data to display.</p>;

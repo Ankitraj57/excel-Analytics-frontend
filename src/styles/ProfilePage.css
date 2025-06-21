@@ -1,85 +1,116 @@
 :root {
   --primary-color: #4facfe;
-  --secondary-color: #3498db;
-  --text-color: #333;
-  --light-text: #666;
-  --border-color: #eee;
+  --secondary-color: #00f2fe;
+  --text-color: #2c3e50;
+  --light-text: #7f8c8d;
+  --border-color: #e0e0e0;
+  --card-bg: #ffffff;
   --shadow-light: rgba(0, 0, 0, 0.05);
   --shadow-medium: rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
+  --radius: 16px;
 }
 
-.profile-container {
+body.dark {
+  --primary-color: #00f2fe;
+  --secondary-color: #4facfe;
+  --text-color: #f0f0f0;
+  --light-text: #999;
+  --border-color: #333;
+  --card-bg: #1e1e1e;
+  --shadow-light: rgba(255, 255, 255, 0.05);
+  --shadow-medium: rgba(255, 255, 255, 0.1);
+}
+
+/* Container */
+.profile-page {
   padding: 2rem;
   max-width: 900px;
   margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* Profile Card */
 .profile-card {
-  background: white;
+  background: var(--card-bg);
   padding: 2.5rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 25px var(--shadow-medium);
-  transition: var(--transition);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 20px var(--shadow-medium);
+  width: 100%;
+  max-width: 700px;
+  margin-top: 2rem;
+  overflow: hidden;
 }
 
-.profile-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 35px var(--shadow-medium);
-}
-
+/* Title */
 .profile-card h2 {
-  color: var(--text-color);
-  margin-bottom: 2rem;
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
+  margin-bottom: 2rem;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-transform: uppercase;
 }
 
+/* Profile Info */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profile-info p {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.profile-info p strong {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+/* Details Grid */
 .profile-details {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
 }
 
+/* Section Cards */
 .profile-section {
-  padding: 2rem;
-  border-radius: 12px;
-  background: linear-gradient(145deg, #f8f9fa, #ffffff);
+  background: var(--card-bg);
   border: 1px solid var(--border-color);
-  transition: var(--transition);
+  border-radius: var(--radius);
+  padding: 2rem;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 12px var(--shadow-light);
 }
 
 .profile-section::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, rgba(79, 172, 254, 0.1), rgba(52, 152, 219, 0.1));
-  border-radius: 12px;
-  transition: var(--transition);
+  inset: 0;
+  background: linear-gradient(45deg, rgba(79, 172, 254, 0.07), rgba(0, 242, 254, 0.07));
   z-index: -1;
+  border-radius: inherit;
 }
 
-.profile-section:hover::before {
-  transform: scale(1.05);
-}
-
+/* Section Headings */
 .profile-section h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
   color: var(--text-color);
   margin-bottom: 1.5rem;
-  font-size: 1.3rem;
-  font-weight: 600;
-  position: relative;
   padding-bottom: 0.5rem;
+  position: relative;
 }
 
 .profile-section h3::after {
@@ -87,92 +118,67 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 0;
-  height: 2px;
+  width: 40px;
+  height: 3px;
   background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-  transition: var(--transition);
+  border-radius: 2px;
 }
 
-.profile-section:hover h3::after {
-  width: 100%;
-}
-
+/* Detail Rows */
 .profile-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 0;
   border-bottom: 1px solid var(--border-color);
-  opacity: 0.8;
-  transition: var(--transition);
-}
-
-.profile-item:hover {
-  opacity: 1;
-  transform: translateX(5px);
+  opacity: 0.85;
 }
 
 .profile-item:last-child {
   border-bottom: none;
 }
 
+/* Label & Value */
 .label {
-  color: var(--light-text);
-  font-weight: 500;
   font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--light-text);
 }
 
 .value {
-  color: var(--text-color);
-  font-weight: 600;
   font-size: 1rem;
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: var(--text-color);
+  letter-spacing: 0.4px;
 }
 
-/* Animation for profile items */
-.profile-item {
-  animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+/* Mobile Optimizations */
+@media (max-width: 600px) {
+  .profile-card {
+    padding: 1.5rem;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .profile-section {
+    padding: 1.2rem;
+  }
+
+  .profile-card h2 {
+    font-size: 1.5rem;
+  }
+
+  .profile-section h3 {
+    font-size: 1.2rem;
+  }
+
+  .profile-info p {
+    font-size: 1rem;
   }
 }
 
-/* Dark mode styles */
-body.dark {
-  --primary-color: #00f2fe;
-  --secondary-color: #4facfe;
-  --text-color: #f0f0f0;
-  --light-text: #999;
-  --border-color: #333;
-  --shadow-light: rgba(255, 255, 255, 0.05);
-  --shadow-medium: rgba(255, 255, 255, 0.1);
-}
-
-body.dark .profile-card {
-  background: #1e1e1e;
-}
-
-body.dark .profile-section {
-  background: linear-gradient(145deg, #2a2a2a, #1e1e1e);
-  border-color: #333;
-}
-
-body.dark .profile-section::before {
-  background: linear-gradient(45deg, rgba(0, 242, 254, 0.1), rgba(79, 172, 254, 0.1));
-}
-
-body.dark .label {
-  color: #999;
-}
-
-body.dark .value {
-  color: #fff;
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }

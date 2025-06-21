@@ -1,24 +1,13 @@
 // src/features/redux/dashboardSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-// Replace with your actual API base URL
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+import { api } from '../auth/authSlice';
 
 // Async thunk to fetch dashboard data from backend
 export const fetchDashboardData = createAsyncThunk(
   'dashboard/fetchDashboardData',
   async (_, thunkAPI) => {
     try {
-      // Assuming you have JWT jwt in auth state for protected route
-      const state = thunkAPI.getState();
-      const jwt = state.auth.jwt;
-
-      const response = await axios.get(`${API_URL}/dashboard`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
+      const response = await api.get('/dashboard');
       return response.data;
     } catch (error) {
       // Return a rejected action with error message

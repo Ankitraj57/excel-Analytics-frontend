@@ -14,7 +14,7 @@ function DashboardPage() {
 
   // Get user info from auth state
   const { user } = useSelector((state) => state.auth);
-  const username = user?.name || 'User';
+  const username = user?.email?.split('@')[0] || 'User';
   const email = user?.email || 'N/A';
   const role = user?.role || 'user';
 

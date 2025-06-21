@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { getAdminUsers, deleteUser, deleteUpload } from '../services/api';
 import '../styles/AdminPage.css';
 
-function AdminPage() {
-  const [users, setUsers] = useState([]);
+const AdminPage = () => {
+  const [data, setData] = useState({ users: [], summary: {} });
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -12,29 +12,17 @@ function AdminPage() {
   const [success, setSuccess] = useState('');
   const [deleteLoading, setDeleteLoading] = useState({});
 
-  // Filter users based on search term
-  const filteredAndSortedUsers = useMemo(() => {
-    return users.filter(user => 
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [users, searchTerm]);
-
-  // Paginate the filtered users
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentUsers = filteredAndSortedUsers.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Total pages
-  const totalPages = Math.ceil(filteredAndSortedUsers.length / itemsPerPage);
-
   const fetchUsers = async () => {
     setLoading(true);
     setError('');
     setSuccess('');
     try {
-      const response = await getAdminUsers();
-      setUsers(response.data);
+      const res = await getAdminUsers();
+      console.log('Admin users data:', res.data);
+      console.log('Users:', res.data.users);
+      console.log('First user data:', res.data.users[0]);
+      setData(res.data);
+      console.log('First user:', res.data.users[0]);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch users');
     } finally {
@@ -46,156 +34,167 @@ function AdminPage() {
     fetchUsers();
   }, []);
 
-  // Handle search
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to first page when searching
-  };
-
-  // Handle page change
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
   const handleDeleteUser = async (userId) => {
-    if (!window.confirm('Are you sure you want to delete this user? This will also delete all their uploads.')) return;
-    
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
+
+    setDeleteLoading((prev) => ({ ...prev, [userId]: true }));
     try {
-      setDeleteLoading(prev => ({ ...prev, [userId]: true }));
       await deleteUser(userId);
       setSuccess('User deleted successfully');
-      setTimeout(() => setSuccess(''), 3000);
       fetchUsers();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to delete user');
     } finally {
-      setDeleteLoading(prev => ({ ...prev, [userId]: false }));
+      setDeleteLoading((prev) => ({ ...prev, [userId]: false }));
     }
   };
 
   const handleDeleteUpload = async (uploadId) => {
     if (!window.confirm('Are you sure you want to delete this upload?')) return;
-    
+
+    setDeleteLoading((prev) => ({ ...prev, [uploadId]: true }));
     try {
-      setDeleteLoading(prev => ({ ...prev, [uploadId]: true }));
       await deleteUpload(uploadId);
       setSuccess('Upload deleted successfully');
-      setTimeout(() => setSuccess(''), 3000);
       fetchUsers();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to delete upload');
     } finally {
-      setDeleteLoading(prev => ({ ...prev, [uploadId]: false }));
+      setDeleteLoading((prev) => ({ ...prev, [uploadId]: false }));
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  // Filter and paginate users
+  const filteredAndSortedUsers = useMemo(() => {
+    const filtered = data.users.filter((user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    const start = (currentPage - 1) * itemsPerPage;
+    return filtered.slice(start, start + itemsPerPage);
+  }, [data.users, searchTerm, currentPage, itemsPerPage]);
+
+  const totalPages = useMemo(() => {
+    return Math.ceil(
+      data.users.filter((user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      ).length / itemsPerPage
+    );
+  }, [data.users, searchTerm, itemsPerPage]);
+
   return (
     <div className="admin-container">
-      <div className="admin-header">
-        <h2>Admin Dashboard - Users Management</h2>
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search users..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+      <div className="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <div className="dashboard-summary">
+          <div className="summary-card">
+            <h3>Total Users</h3>
+            <p>{data.summary?.totalUsers || 0}</p>
+          </div>
+          <div className="summary-card">
+            <h3>Admin Users</h3>
+            <p>{data.summary?.adminUsers || 0}</p>
+          </div>
+          <div className="summary-card">
+            <h3>Regular Users</h3>
+            <p>{data.summary?.regularUsers || 0}</p>
+          </div>
         </div>
-        {success && <div className="success-message">{success}</div>}
-        {error && <div className="error-message">{error}</div>}
       </div>
 
-      {loading ? (
-        <div className="loading-spinner">
-          <div className="spinner"></div>
-          <p>Loading users...</p>
-        </div>
-      ) : (
-        <div className="users-table">
-          {filteredAndSortedUsers.length === 0 ? (
-            <p>No users found matching your search.</p>
-          ) : (
-            <>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Uploads</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentUsers.map((user) => (
-                    <tr key={user._id}>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <td>
-                        <span className={`role-badge ${user.role}`}>
-                          {user.role}
-                        </span>
-                      </td>
-                      <td>
-                        {user.uploads && user.uploads.length > 0 ? (
-                          <ul className="uploads-list">
-                            {user.uploads.map((upload) => (
-                              <li key={upload._id}>
-                                {upload.fileName}{' '}
-                                <button
-                                  onClick={() => handleDeleteUpload(upload._id)}
-                                  className="delete-button"
-                                  title="Delete upload"
-                                  disabled={deleteLoading[upload._id]}
-                                >
-                                  {deleteLoading[upload._id] ? 'Deleting...' : 'Delete'}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <span>No uploads</span>
-                        )}
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => handleDeleteUser(user._id)}
-                          className="delete-button"
-                          disabled={deleteLoading[user._id]}
-                        >
-                          {deleteLoading[user._id] ? 'Deleting...' : 'Delete User'}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              
-              {totalPages > 1 && (
-                <div className="pagination">
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                  <span>
-                    Page {currentPage} of {totalPages}
+      {loading && <div className="spinner">Loading...</div>}
+      {error && <div className="error">{error}</div>}
+      {success && <div className="success">{success}</div>}
+
+      <div className="search-section">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="search-input"
+        />
+      </div>
+
+      <div className="user-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Uploads</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredAndSortedUsers.map((user) => (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>
+                  <span className={`role-badge ${user.role}`}>
+                    {user.role}
                   </span>
+                </td>
+                <td>
+                  <div className="uploads-list">
+                    <p>Total Uploads: {user.uploads?.length || 0}</p>
+                    {console.log('User uploads:', user.uploads)}
+                    {(user.uploads || []).slice(0, 3).map((upload) => (
+                      <div key={upload._id} className="upload-item">
+                        <span className="file-name">{upload.fileName}</span>
+                        <span className="upload-status">{upload.status}</span>
+                        {upload.error && <span className="error">Error: {upload.error}</span>}
+                        <button
+                          onClick={() => handleDeleteUpload(upload._id)}
+                          disabled={deleteLoading[upload._id]}
+                          className="delete-upload-btn"
+                        >
+                          {deleteLoading[upload._id] ? 'Deleting...' : 'Delete'}
+                        </button>
+                      </div>
+                    ))}
+                    {user.uploads?.length > 3 && (
+                      <p className="more-uploads">+{user.uploads.length - 3} more uploads</p>
+                    )}
+                  </div>
+                </td>
+                <td>
                   <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
+                    onClick={() => handleDeleteUser(user._id)}
+                    disabled={deleteLoading[user._id]}
+                    className="delete-btn"
                   >
-                    Next
+                    {deleteLoading[user._id] ? 'Deleting...' : 'Delete User'}
                   </button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="pagination">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => setCurrentPage(page)}
+            className={page === currentPage ? 'active' : ''}
+            disabled={page === currentPage}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default AdminPage;

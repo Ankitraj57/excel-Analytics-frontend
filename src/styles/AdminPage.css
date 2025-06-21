@@ -1,385 +1,244 @@
 :root {
-  --primary-color: #2c7a7b;
-  --primary-hover: #285e61;
-  --danger-color: #e53e3e;
-  --danger-hover: #c53030;
-  --bg-light: #f7fafc;
-  --bg-white: #ffffff;
-  --bg-gray: #edf2f7;
-  --text-primary: #2d3748;
-  --text-secondary: #718096;
-  --border-color: #e2e8f0;
-  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --text-dark: #111827;
+  --border: #e5e7eb;
+  --hover-bg: #f9fafb;
+  --card-bg: #ffffff;
+  --bg: #f3f4f6;
 }
 
-body {
-  background-color: var(--bg-light);
-  font-family: var(--font-family);
-  color: var(--text-primary);
-  margin: 0;
-  padding: 0;
-}
-
-h2 {
-  margin: 20px 0;
-  font-weight: 700;
-  font-size: 2rem;
-  color: var(--primary-color);
-}
-
-/* Admin Container */
+/* Container */
 .admin-container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
+  padding: 2rem;
+  background-color: var(--bg);
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-/* Admin Header */
-.admin-header {
-  margin-bottom: 30px;
+/* Dashboard Header */
+.dashboard-header {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-/* Search Container */
-.search-container {
-  margin: 15px 0;
+.dashboard-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-dark);
 }
 
-.search-container input {
-  width: 100%;
-  max-width: 300px;
-  padding: 10px 15px;
-  border: 1px solid var(--border-color);
+/* Summary Cards */
+.dashboard-summary {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.summary-card {
+  background-color: var(--card-bg);
+  padding: 1rem 1.5rem;
   border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.search-container input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-}
-
-/* Success/Error Messages */
-.success-message {
-  color: #22c55e;
-  padding: 10px;
-  background-color: #dcfce7;
-  border-radius: 6px;
-  margin-bottom: 15px;
-}
-
-.error-message {
-  color: var(--danger-color);
-  background-color: #fee2e2;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 15px;
-}
-
-/* Loading Spinner */
-.loading-spinner {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  flex: 1;
+  min-width: 180px;
   text-align: center;
-  padding: 40px 0;
 }
 
-.spinner {
-  width: 40px;
-  height: 40px;
-  margin: 0 auto 20px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid var(--primary-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+.summary-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.summary-card p {
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
-/* Users Table */
-.users-table {
-  background: var(--bg-white);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+/* Search Section */
+.search-section {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.search-input {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 240px;
+  background-color: #fff;
+  color: var(--text-dark);
+}
+
+/* Table */
+.user-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
   overflow: hidden;
 }
 
-/* Table Base */
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-/* Table Header */
-thead {
-  background: var(--primary-color);
-  color: white;
-}
-
-th {
-  padding: 15px;
+.user-table th,
+.user-table td {
+  padding: 0.75rem 1rem;
   text-align: left;
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Table Body */
-tbody tr {
-  border-bottom: 1px solid var(--border-color);
-  transition: background-color 0.2s ease;
-}
-
-tbody tr:hover {
-  background-color: #f8fafc;
-}
-
-td {
-  padding: 15px;
+  border-bottom: 1px solid var(--border);
   font-size: 0.95rem;
-  vertical-align: middle;
 }
 
-/* Role Badge */
-.role-badge {
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: 500;
+.user-table th {
+  background-color: var(--hover-bg);
+  color: var(--text-dark);
+  font-weight: 600;
 }
 
-.role-badge.user {
-  background: #f0fdf4;
-  color: #16a34a;
-}
-
-.role-badge.admin {
-  background: #f8fafc;
-  color: #1e40af;
-}
-
-/* Uploads List */
-.uploads-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.uploads-list li {
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.uploads-list li:last-child {
+.user-table tr:last-child td {
   border-bottom: none;
 }
 
 /* Buttons */
-.delete-button {
-  background: var(--danger-color);
+.delete-upload-btn,
+.delete-btn {
+  background-color: var(--danger);
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 0.3rem 0.7rem;
+  border-radius: 5px;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 0.85rem;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s;
+  margin-top: 0.3rem;
 }
 
-.delete-button:hover:not(:disabled) {
-  background: var(--danger-hover);
+.delete-upload-btn:hover:not(:disabled),
+.delete-btn:hover:not(:disabled) {
+  background-color: #b91c1c;
 }
 
-.delete-button:disabled {
-  background: #ccc;
+.delete-upload-btn:disabled,
+.delete-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Messages */
+.success {
+  background-color: #dcfce7;
+  color: var(--success);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.error {
+  background-color: #fee2e2;
+  color: var(--danger);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+/* Spinner */
+.spinner {
+  margin: 2rem auto;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Uploads */
+.uploads-list {
+  margin-top: 0.5rem;
+}
+
+.upload-item {
+  background-color: var(--hover-bg);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.4rem;
+  font-size: 0.875rem;
+}
+
+.file-name {
+  font-weight: 600;
+  display: block;
+}
+
+.upload-status {
+  font-size: 0.75rem;
+  color: var(--text-dark);
+}
+
+.more-uploads {
+  font-size: 0.75rem;
+  color: var(--primary);
+  margin-top: 0.3rem;
+}
+
+/* Role badge */
+.role-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.role-badge.admin {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.role-badge.user {
+  background-color: #fef9c3;
+  color: #ca8a04;
 }
 
 /* Pagination */
 .pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  padding: 20px;
+  margin-top: 1.5rem;
+  text-align: center;
 }
 
 .pagination button {
-  background: var(--primary-color);
-  color: white;
+  margin: 0 0.2rem;
+  padding: 0.5rem 0.8rem;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 5px;
+  background-color: var(--hover-bg);
+  color: var(--text-dark);
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s;
+}
+
+.pagination button.active,
+.pagination button:hover:not(:disabled) {
+  background-color: var(--primary);
+  color: white;
 }
 
 .pagination button:disabled {
-  background: #ccc;
+  opacity: 0.6;
   cursor: not-allowed;
-}
-
-.pagination span {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.error-message {
-  color: var(--danger-color);
-  margin-bottom: 20px;
-  text-align: center;
-  font-weight: 600;
-}
-
-/* Table Responsive Wrapper */
-.table-responsive {
-  overflow-x: auto;
-  background: var(--bg-white);
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-}
-
-/* Table Base */
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  min-width: 700px;
-  border-radius: 12px;
-}
-
-thead tr {
-  background: var(--primary-color);
-  color: #fff;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
-}
-
-thead th {
-  padding: 16px 20px;
-  font-weight: 600;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-}
-
-/* Table Body */
-tbody tr {
-  background: var(--bg-white);
-  border-bottom: 1px solid var(--border-color);
-  transition: background-color 0.3s ease, border-left 0.3s ease;
-  border-left: 4px solid transparent;
-}
-
-tbody tr:hover {
-  background-color: #e6fffa;
-  border-left: 4px solid var(--primary-color);
-}
-
-tbody tr:nth-child(even) {
-  background-color: var(--bg-gray);
-}
-
-th, td {
-  padding: 14px 18px;
-  font-size: 0.95rem;
-  vertical-align: middle;
-  text-align: left;
-}
-
-/* List inside td */
-td ul {
-  list-style: disc inside;
-  padding-left: 18px;
-  margin: 0;
-}
-
-td ul li {
-  font-size: 0.9rem;
-  margin-bottom: 6px;
-  color: var(--text-secondary);
-  display: flex;
-  justify-content: space-between;
-}
-
-/* Buttons */
-button {
-  font-family: var(--font-family);
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  user-select: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  font-size: 0.9rem;
-}
-
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-button:active {
-  transform: scale(0.97);
-}
-
-/* Delete User Button */
-button[title="Delete user"],
-button[title="Delete User"] {
-  background-color: var(--danger-color);
-  color: white;
-  box-shadow: 0 4px 8px rgba(229, 62, 62, 0.3);
-}
-
-button[title="Delete user"]:hover,
-button[title="Delete User"]:hover {
-  background-color: var(--danger-hover);
-}
-
-/* Upload delete icon-button */
-button[title="Delete upload"] {
-  background: transparent;
-  color: var(--danger-color);
-  font-size: 1.3rem;
-  padding: 0;
-  margin-left: 8px;
-  border: none;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-button[title="Delete upload"]:hover {
-  color: var(--danger-hover);
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  h2 {
-    font-size: 1.8rem;
-    margin: 20px 0 15px;
-  }
-
-  th, td {
-    padding: 10px 12px;
-    font-size: 0.85rem;
-  }
-
-  button {
-    padding: 6px 10px;
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 480px) {
-  table {
-    min-width: 550px;
-  }
 }
