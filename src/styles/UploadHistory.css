@@ -110,6 +110,53 @@
 .upload-actions {
   display: flex;
   justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 1rem;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.action-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.action-btn.view-insights {
+  background-color: #3182ce;
+  color: white;
+}
+
+.action-btn.view-insights:hover {
+  background-color: #2c5282;
+}
+
+.action-btn.delete {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  border-color: #fed7d7;
+}
+
+.action-btn.delete:hover {
+  background-color: #fff1f1;
+  border-color: #feb2b2;
+}
+
+.action-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .delete-btn {
@@ -132,12 +179,7 @@
   cursor: not-allowed;
 }
 
-/* Dark Mode */
-body.dark .upload-card {
-  background: var(--bg-dark);
-  border: 1px solid var(--border-dark);
-}
-
+/* Responsive adjustments */
 body.dark .upload-header h3,
 body.dark .upload-date {
   color: var(--text-light);
@@ -149,6 +191,47 @@ body.dark .data-preview summary {
 
 body.dark .data-preview pre {
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Dark Mode Styles */
+body.dark .upload-card {
+  background: #2d3748;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+body.dark .upload-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+body.dark .upload-header h3 {
+  color: #e2e8f0;
+}
+
+body.dark .upload-date {
+  color: #a0aec0;
+}
+
+body.dark .action-btn.view-insights {
+  background-color: #4299e1;
+}
+
+body.dark .action-btn.view-insights:hover {
+  background-color: #3182ce;
+}
+
+body.dark .action-btn.delete {
+  background-color: #2d3748;
+  color: #fc8181;
+  border-color: #4a5568;
+}
+
+body.dark .action-btn.delete:hover {
+  background-color: #4a5568;
+  border-color: #718096;
+}
+
+body.dark .upload-actions {
+  border-top-color: #4a5568;
 }
 
 /* Responsive Design */

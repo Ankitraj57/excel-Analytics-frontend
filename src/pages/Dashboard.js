@@ -24,9 +24,35 @@ function DashboardPage() {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return 'N/A';
-    const date = new Date(timestamp);
+  
+    // Handle different timestamp formats
+    let date;
+    if (typeof timestamp === 'string') {
+      // Try to parse ISO string or Unix timestamp
+      if (timestamp.includes('-')) {
+        date = new Date(timestamp);
+      } else {
+        // Try Unix timestamp
+        date = new Date(parseInt(timestamp) * 1000);
+      }
+    } else if (typeof timestamp === 'number') {
+      // Unix timestamp in seconds
+      date = new Date(timestamp * 1000);
+    } else {
+      date = new Date(timestamp);
+    }
+
     if (isNaN(date.getTime())) return 'Invalid Date';
-    return date.toLocaleString();
+  
+    // Format date in a more readable way
+    return date.toLocaleString('en-IN', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
   };
 
   const lastUploadDate = formatDate(lastUpload);

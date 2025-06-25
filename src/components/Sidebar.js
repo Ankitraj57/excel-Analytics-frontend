@@ -7,7 +7,6 @@ import {
   FiLogOut, FiShield, FiMenu, FiX
 } from 'react-icons/fi';
 import '../styles/Sidebar.css';
-import { LucideFileBox } from 'lucide-react';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -58,14 +57,7 @@ const Sidebar = () => {
           >
             <FiClock />UploadHistory
           </NavLink>
-          <NavLink
-            to="/ai-insight"
-            onClick={() => setSidebarOpen(false)}
-            className={({ isActive }) => (isActive ? 'active-link' : '')}
-          >
-            <LucideFileBox/> AI Summary
-          </NavLink>
-          <NavLink
+<NavLink
             to="/profile"
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) => (isActive ? 'active-link' : '')}

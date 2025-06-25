@@ -1,15 +1,23 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { getUploadHistory } from '../features/redux/uploadHistorySlice';
-import { deleteFileById } from '../features/files/fileSlice'; // if deleteFileById is in fileSlice
+import { deleteFileById } from '../features/files/fileSlice';
+import { FiBarChart2, FiTrash2 } from 'react-icons/fi';
 
 import '../styles/UploadHistory.css';
 
 const UploadHistory = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { history, loading, error } = useSelector(state => state.uploadHistory);
   const { deleting, error: deleteError } = useSelector(state => state.files);
 
+  const handleViewInsights = (fileId) => {
+    navigate(`/ai-insight/${fileId}`);
+  };
+
+  // Fetch upload history when component mounts
   useEffect(() => {
     dispatch(getUploadHistory());
   }, [dispatch]);
@@ -50,7 +58,7 @@ const UploadHistory = () => {
             <div className="upload-header">
               <h3>{file.originalname}</h3>
               <span className="upload-date">
-                {new Date(file.createdAt).toLocaleString()}
+                {file.formattedCreatedAt || new Date(file.createdAt).toLocaleString()}
               </span>
             </div>
 
@@ -65,11 +73,25 @@ const UploadHistory = () => {
 
             <div className="upload-actions">
               <button 
-                className="delete-btn" 
-                onClick={() => handleDelete(file._id)}
-                disabled={deleting}
+                className="action-btn view-insights"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleViewInsights(file._id);
+                }}
+                title="View AI Insights"
               >
-                {deleting ? 'Deleting...' : 'Delete'}
+                <FiBarChart2 /> Insights
+              </button>
+              <button 
+                className="action-btn delete"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(file._id);
+                }}
+                disabled={deleting}
+                title="Delete File"
+              >
+                <FiTrash2 /> {deleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>
           </div>

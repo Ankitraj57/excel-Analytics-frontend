@@ -31,8 +31,31 @@ export const updateUserRole = (userId, role) => api.put(`/admin/users/${userId}/
 
 // Protected APIs
 export const getAdminData = () => api.get('/admin/data');
-export const getUploads = () => api.get('/admin/uploads'); 
-export const getUpload = (id) => api.get(`/admin/uploads/${id}`);
-export const analyzeData = (data) => api.post('/ai-insight/analyze', { data });
+export const getUploads = () => api.get('/files/history'); 
+export const getUpload = (id) => {
+  console.log('Fetching upload with ID:', id);
+  console.log('Full URL:', `${API_BASE_URL}/files/${id}`);
+  return api.get(`/files/${id}`).then(response => {
+    console.log('Upload response:', response);
+    return response;
+  }).catch(error => {
+    console.error('Error fetching upload:', error);
+    throw error;
+  });
+};
+// Demo mode - no backend calls for insights
+export const analyzeData = async () => {
+  // This is a mock function that doesn't make any actual API calls
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        data: {
+          insight: "This is a demo insight. In a real implementation, this would come from the backend.",
+          success: true
+        }
+      });
+    }, 1000);
+  });
+};
 
 export default api;

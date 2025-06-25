@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { getAdminUsers, deleteUser, updateUserRole } from '../services/api';
-import { Bar } from 'react-chartjs-2';
+import { getAdminUsers, deleteUser } from '../services/api'; // Removed unused updateUserRole
+
 import '../styles/AdminPage.css';
 
 const AdminPage = () => {
@@ -62,20 +62,229 @@ const AdminPage = () => {
     }
   };
 
-  const handleToggleRole = async (userId, currentRole) => {
-    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+  const [apiWorking] = useState(true); // Removed unused setApiWorking
+
+  // Function to test server connection
+  const testServerConnection = async () => {
     try {
-      await updateUserRole(userId, newRole);
-      setSuccess(`Role changed to ${newRole} successfully`);
+      const response = await fetch('http://localhost:5000', { method: 'HEAD' });
+      return {
+        isOnline: true,
+        status: response.status,
+        statusText: response.statusText
+      };
+    } catch (error) {
+      return {
+        isOnline: false,
+        error: error.message
+      };
+    }
+  };
+
+  // Function to make API call with timeout
+  const fetchWithTimeout = async (url, options, timeout = 10000) => { // Increased timeout to 10s
+    const controller = new AbortController();
+    const id = setTimeout(() => {
+      console.error('Request timed out after', timeout, 'ms');
+      controller.abort();
+    }, timeout);
+
+    try {
+      console.log('Attempting to connect to:', url);
+      console.log('Request options:', {
+        method: options.method,
+        headers: options.headers,
+        body: options.body
+      });
+
+      const startTime = Date.now();
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers
+        }
+      });
+      clearTimeout(id);
+
+      const endTime = Date.now();
+      console.log(`Request completed in ${endTime - startTime}ms`, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries())
+      });
+
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = await response.json();
+          console.error('API Error Response:', errorData);
+        } catch (e) {
+          const text = await response.text();
+          console.error('Failed to parse error response as JSON. Raw response:', text);
+          errorData = { message: text || 'Unknown error occurred' };
+        }
+
+        const error = new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        error.name = 'APIError';
+        error.status = response.status;
+        error.response = response;
+        error.data = errorData;
+        throw error;
+      }
+
+      return response;
+    } catch (error) {
+      clearTimeout(id);
+
+      console.error('Fetch error details:', {
+        name: error.name,
+        message: error.message,
+        code: error.code,
+        stack: error.stack
+      });
+
+      // Test server connection if we get a network error
+      if (error.name === 'TypeError' || error.name === 'AbortError') {
+        console.log('Testing server connection...');
+        try {
+          const serverStatus = await testServerConnection();
+          console.log('Server status:', serverStatus);
+          error.serverStatus = serverStatus;
+        } catch (e) {
+          console.error('Error testing server connection:', e);
+        }
+      }
+
+      throw error;
+    }
+  };
+
+  const handleToggleRole = async (userId, currentRole) => {
+    if (!apiWorking) {
+      setError('Role change functionality is currently unavailable');
+      return;
+    }
+
+    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+    const requestUrl = `http://localhost:5000/api/admin/users/${userId}/role`; // Using full URL for testing
+
+    console.log('Role Change Request:', {
+      userId,
+      currentRole,
+      newRole,
+      requestUrl,
+      timestamp: new Date().toISOString()
+    });
+
+    setDeleteLoading(prev => ({ ...prev, [userId]: true }));
+    setError('');
+    setSuccess('');
+
+    try {
+      console.log('Sending request to:', requestUrl);
+      console.log('Request payload:', { role: newRole });
+
+      const token = localStorage.getItem('token') || ''; // Get token from localStorage
+      const startTime = performance.now();
+
+      // Make direct fetch call with timeout
+      const response = await fetchWithTimeout(
+        requestUrl,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ role: newRole })
+        },
+        5000 // 5 second timeout
+      );
+
+      const endTime = performance.now();
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const error = new Error(errorData.message || 'Failed to update role');
+        error.response = {
+          status: response.status,
+          statusText: response.statusText,
+          data: errorData
+        };
+        throw error;
+      }
+
+      const data = await response.json();
+
+      console.log('Role update successful!', {
+        data,
+        status: response.status,
+        duration: `${(endTime - startTime).toFixed(2)}ms`
+      });
+
+      // Update the UI optimistically
       setData(prev => ({
         ...prev,
         users: prev.users.map(user =>
           user._id === userId ? { ...user, role: newRole } : user
         ),
       }));
+
+      setSuccess(`Successfully changed role to ${newRole}`);
+
+      // Refresh user list after a short delay
+      setTimeout(() => {
+        fetchUsers().catch(err => {
+          console.error('Error refreshing user list:', err);
+        });
+      }, 300);
+
     } catch (err) {
-      setError('Failed to update user role');
-      console.error(err);
+      console.error('❌ Role update failed:', {
+        name: err.name,
+        message: err.message,
+        code: err.code,
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        responseData: err.response?.data
+      });
+
+      console.error('Full error details:', err);
+
+      if (err.name === 'AbortError') {
+        setError('Request timed out. Possible issues:');
+        setError(prev => prev + '\n1. Backend server is not responding');
+        setError(prev => prev + '\n2. Network connectivity issues');
+        setError(prev => prev + '\n3. Server is overloaded');
+      }
+      else if (err.serverStatus) {
+        if (!err.serverStatus.isOnline) {
+          setError('Backend server is not reachable. Please check:');
+          setError(prev => prev + '\n1. Is the backend server running at http://localhost:5000?');
+          setError(prev => prev + '\n2. Check backend server logs for errors');
+        } else {
+          setError('Server is online but request failed. Check:');
+          setError(prev => prev + '\n1. Is the API endpoint correct?');
+          setError(prev => prev + '\n2. Check backend CORS configuration');
+        }
+      }
+      else if (!err.response || err.code === 'ERR_NETWORK' || err.code === 'ERR_CORS') {
+        setError('Network/CORS issue detected. Please check:');
+        setError(prev => prev + '\n1. Is the backend server running?');
+        setError(prev => prev + '\n2. Is CORS properly configured on the backend?');
+        setError(prev => prev + '\n3. Check browser console for details (F12 > Console)');
+      } else {
+        const errorMessage = err.response?.data?.message ||
+          err.message ||
+          'Failed to update user role. Please check the console for details.';
+        setError(`Error: ${errorMessage}`);
+      }
+    } finally {
+      setDeleteLoading(prev => ({ ...prev, [userId]: false }));
     }
   };
 
@@ -100,15 +309,12 @@ const AdminPage = () => {
 
   const exportToCSV = () => {
     if (data.users.length === 0) return;
-    const header = ['Name', 'Email', 'Role', 'Total Uploads', 'Successful', 'Failed', 'Success Rate'];
+    const header = ['Name', 'Email', 'Role', 'Total Uploads'];
     const rows = data.users.map(u => [
       u.name,
       u.email,
       u.role,
-      u.uploadStats?.totalUploads || 0,
-      u.uploadStats?.successfulUploads || 0,
-      u.uploadStats?.failedUploads || 0,
-      `${u.uploadStats?.successRate || 0}%`
+      u.uploadStats?.totalUploads || 0
     ]);
 
     const csvContent =
@@ -124,26 +330,6 @@ const AdminPage = () => {
     document.body.removeChild(link);
   };
 
-  const chartData = {
-    labels: data.users.map(u => u.name),
-    datasets: [
-      {
-        label: 'Total Uploads',
-        data: data.users.map(u => u.uploadStats?.totalUploads || 0),
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-      },
-      {
-        label: 'Successful Uploads',
-        data: data.users.map(u => u.uploadStats?.successfulUploads || 0),
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-      },
-      {
-        label: 'Failed Uploads',
-        data: data.users.map(u => u.uploadStats?.failedUploads || 0),
-        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-      },
-    ],
-  };
 
   return (
     <div className="admin-container">
@@ -174,10 +360,6 @@ const AdminPage = () => {
             </div>
           </div>
 
-          <div className="chart-container">
-            <Bar data={chartData} />
-          </div>
-
           <div className="search-section">
             <input
               type="text"
@@ -205,7 +387,13 @@ const AdminPage = () => {
                 </thead>
                 <tbody>
                   {filteredAndSortedUsers.map(user => {
-                    const stats = user.uploadStats || { totalUploads: 0, successfulUploads: 0, failedUploads: 0, successRate: 0 };
+                    const stats = {
+                      totalUploads: user.totalUploads || 0,
+                      successCount: user.successCount || 0,
+                      failCount: user.failCount || 0,
+                      successRate: user.successRate || 0,
+                    };
+
                     return (
                       <tr key={user._id}>
                         <td>{user.name}</td>
@@ -217,19 +405,23 @@ const AdminPage = () => {
                         </td>
                         <td>
                           <div className="user-stats">
-                            <div>Total: {stats.totalUploads}</div>
-                            <div>✅: {stats.successfulUploads}</div>
-                            <div>❌: {stats.failedUploads}</div>
-                            <div>Rate: {stats.successRate}%</div>
+                            <div>Total Uploads: {stats.totalUploads}</div>
                           </div>
                         </td>
                         <td>
-                          <button
-                            onClick={() => handleToggleRole(user._id, user.role)}
-                            className="toggle-btn"
-                          >
-                            Make {user.role === 'admin' ? 'User' : 'Admin'}
-                          </button>
+                          {apiWorking ? (
+                            <button
+                              onClick={() => handleToggleRole(user._id, user.role)}
+                              className="toggle-btn"
+                              disabled={deleteLoading[user._id]}
+                            >
+                              {deleteLoading[user._id] ? 'Updating...' : `Make ${user.role === 'admin' ? 'User' : 'Admin'}`}
+                            </button>
+                          ) : (
+                            <span className="text-muted" style={{ color: '#999' }}>
+                              Role change unavailable
+                            </span>
+                          )}
                           <button
                             onClick={() => handleDeleteUser(user._id)}
                             disabled={deleteLoading[user._id]}
