@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { getAdminUsers, deleteUser } from '../services/api'; // Removed unused updateUserRole
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getAdminUsers, deleteUser, getUploads, updateUserRole } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 import '../styles/AdminPage.css';
 
 const AdminPage = () => {
   const [data, setData] = useState({ users: [], summary: {} });
+  const [userUploads, setUserUploads] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -12,14 +15,59 @@ const AdminPage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [deleteLoading, setDeleteLoading] = useState({});
+  const navigate = useNavigate();
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError('');
     setSuccess('');
     try {
-      const res = await getAdminUsers();
-      const { users, summary } = res.data;
+      const [usersRes, uploadsRes] = await Promise.all([
+        getAdminUsers(),
+        getUploads()
+      ]);
+      console.log('Uploads from backend:', uploadsRes.data); 
+      const { users, summary } = usersRes.data;
+      const uploads = uploadsRes.data || [];
+
+      const uploadsByUser = {};
+      
+      uploads.forEach((upload) => {
+         console.log('Processing upload by user:', upload.user);
+        let userId  = null;
+        
+        if (upload.user && typeof upload.user === 'object') {
+          userId = upload.user._id?.toString();
+        } else if(typeof upload.user == 'string') {
+          userId = upload.user;
+        }
+
+        
+        if (!userId) return; {
+          const userIdStr = userId.toString();
+          
+          if (!uploadsByUser[userIdStr]) {
+            uploadsByUser[userIdStr] = [];
+          }
+          
+          uploadsByUser[userIdStr].push({
+            ...upload,
+            originalname: upload.originalname || upload.filename,
+            uploadedAt: upload.uploadedAt || upload.createdAt || new Date()
+          });
+          console.log('All users:', users);
+console.log('All uploads:', uploads);
+console.log('Uploads grouped by user:', uploadsByUser);
+ console.log('Processing upload by user:', userIdStr);
+
+        }
+      });
+Object.entries(uploadsByUser).forEach(([userId, files]) => {
+  console.log(`User ID: ${userId}, Uploaded Files:`, files.map(f => f.originalname));
+});
+
+      setUserUploads(uploadsByUser);
+      console.log('Uploads grouped by user:', uploadsByUser);
 
       setData({
         users,
@@ -27,11 +75,11 @@ const AdminPage = () => {
           totalUsers: users.length,
           adminUsers: users.filter(u => u.role === 'admin').length,
           regularUsers: users.filter(u => u.role === 'user').length,
+          
         },
       });
     } catch (err) {
       setError('Failed to fetch users');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -56,112 +104,12 @@ const AdminPage = () => {
       }));
     } catch (err) {
       setError('Failed to delete user');
-      console.error(err);
     } finally {
       setDeleteLoading(prev => ({ ...prev, [userId]: false }));
     }
   };
 
-  const [apiWorking] = useState(true); // Removed unused setApiWorking
-
-  // Function to test server connection
-  const testServerConnection = async () => {
-    try {
-      const response = await fetch('http://localhost:5000', { method: 'HEAD' });
-      return {
-        isOnline: true,
-        status: response.status,
-        statusText: response.statusText
-      };
-    } catch (error) {
-      return {
-        isOnline: false,
-        error: error.message
-      };
-    }
-  };
-
-  // Function to make API call with timeout
-  const fetchWithTimeout = async (url, options, timeout = 10000) => { // Increased timeout to 10s
-    const controller = new AbortController();
-    const id = setTimeout(() => {
-      console.error('Request timed out after', timeout, 'ms');
-      controller.abort();
-    }, timeout);
-
-    try {
-      console.log('Attempting to connect to:', url);
-      console.log('Request options:', {
-        method: options.method,
-        headers: options.headers,
-        body: options.body
-      });
-
-      const startTime = Date.now();
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal,
-        mode: 'cors',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers
-        }
-      });
-      clearTimeout(id);
-
-      const endTime = Date.now();
-      console.log(`Request completed in ${endTime - startTime}ms`, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: Object.fromEntries(response.headers.entries())
-      });
-
-      if (!response.ok) {
-        let errorData;
-        try {
-          errorData = await response.json();
-          console.error('API Error Response:', errorData);
-        } catch (e) {
-          const text = await response.text();
-          console.error('Failed to parse error response as JSON. Raw response:', text);
-          errorData = { message: text || 'Unknown error occurred' };
-        }
-
-        const error = new Error(errorData.message || `HTTP error! status: ${response.status}`);
-        error.name = 'APIError';
-        error.status = response.status;
-        error.response = response;
-        error.data = errorData;
-        throw error;
-      }
-
-      return response;
-    } catch (error) {
-      clearTimeout(id);
-
-      console.error('Fetch error details:', {
-        name: error.name,
-        message: error.message,
-        code: error.code,
-        stack: error.stack
-      });
-
-      // Test server connection if we get a network error
-      if (error.name === 'TypeError' || error.name === 'AbortError') {
-        console.log('Testing server connection...');
-        try {
-          const serverStatus = await testServerConnection();
-          console.log('Server status:', serverStatus);
-          error.serverStatus = serverStatus;
-        } catch (e) {
-          console.error('Error testing server connection:', e);
-        }
-      }
-
-      throw error;
-    }
-  };
+  const [apiWorking] = useState(true);
 
   const handleToggleRole = async (userId, currentRole) => {
     if (!apiWorking) {
@@ -170,119 +118,73 @@ const AdminPage = () => {
     }
 
     const newRole = currentRole === 'admin' ? 'user' : 'admin';
-    const requestUrl = `http://localhost:5000/api/admin/users/${userId}/role`; // Using full URL for testing
-
-    console.log('Role Change Request:', {
-      userId,
-      currentRole,
-      newRole,
-      requestUrl,
-      timestamp: new Date().toISOString()
-    });
-
+    const action = newRole === 'admin' ? 'make admin' : 'make regular user';
+    
+    // Show confirmation dialog
+    const isConfirmed = window.confirm(`Are you sure you want to ${action} this user?`);
+    if (!isConfirmed) {
+      return;
+    }
+    
     setDeleteLoading(prev => ({ ...prev, [userId]: true }));
     setError('');
     setSuccess('');
 
     try {
-      console.log('Sending request to:', requestUrl);
-      console.log('Request payload:', { role: newRole });
+      const response = await updateUserRole(userId, newRole);
+      
+      if (response && response.data) {
+        // Update local state to reflect the change immediately
+        setData(prev => ({
+          ...prev,
+          users: prev.users.map(user =>
+            user._id === userId ? { ...user, role: newRole } : user
+          ),
+        }));
 
-      const token = localStorage.getItem('token') || ''; // Get token from localStorage
-      const startTime = performance.now();
-
-      // Make direct fetch call with timeout
-      const response = await fetchWithTimeout(
-        requestUrl,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ role: newRole })
-        },
-        5000 // 5 second timeout
-      );
-
-      const endTime = performance.now();
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const error = new Error(errorData.message || 'Failed to update role');
-        error.response = {
-          status: response.status,
-          statusText: response.statusText,
-          data: errorData
-        };
-        throw error;
-      }
-
-      const data = await response.json();
-
-      console.log('Role update successful!', {
-        data,
-        status: response.status,
-        duration: `${(endTime - startTime).toFixed(2)}ms`
-      });
-
-      // Update the UI optimistically
-      setData(prev => ({
-        ...prev,
-        users: prev.users.map(user =>
-          user._id === userId ? { ...user, role: newRole } : user
-        ),
-      }));
-
-      setSuccess(`Successfully changed role to ${newRole}`);
-
-      // Refresh user list after a short delay
-      setTimeout(() => {
-        fetchUsers().catch(err => {
-          console.error('Error refreshing user list:', err);
+        // Show success toast
+        toast.success(`Successfully changed role to ${newRole}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
         });
-      }, 300);
 
-    } catch (err) {
-      console.error('❌ Role update failed:', {
-        name: err.name,
-        message: err.message,
-        code: err.code,
-        status: err.response?.status,
-        statusText: err.response?.statusText,
-        responseData: err.response?.data
-      });
-
-      console.error('Full error details:', err);
-
-      if (err.name === 'AbortError') {
-        setError('Request timed out. Possible issues:');
-        setError(prev => prev + '\n1. Backend server is not responding');
-        setError(prev => prev + '\n2. Network connectivity issues');
-        setError(prev => prev + '\n3. Server is overloaded');
-      }
-      else if (err.serverStatus) {
-        if (!err.serverStatus.isOnline) {
-          setError('Backend server is not reachable. Please check:');
-          setError(prev => prev + '\n1. Is the backend server running at http://localhost:5000?');
-          setError(prev => prev + '\n2. Check backend server logs for errors');
-        } else {
-          setError('Server is online but request failed. Check:');
-          setError(prev => prev + '\n1. Is the API endpoint correct?');
-          setError(prev => prev + '\n2. Check backend CORS configuration');
-        }
-      }
-      else if (!err.response || err.code === 'ERR_NETWORK' || err.code === 'ERR_CORS') {
-        setError('Network/CORS issue detected. Please check:');
-        setError(prev => prev + '\n1. Is the backend server running?');
-        setError(prev => prev + '\n2. Is CORS properly configured on the backend?');
-        setError(prev => prev + '\n3. Check browser console for details (F12 > Console)');
+        // Refresh the user list after a short delay
+        setTimeout(() => {
+          fetchUsers().catch(console.error);
+        }, 500);
       } else {
-        const errorMessage = err.response?.data?.message ||
-          err.message ||
-          'Failed to update user role. Please check the console for details.';
-        setError(`Error: ${errorMessage}`);
+        throw new Error('Invalid response from server');
       }
+    } catch (err) {
+      console.error('Error updating user role:', err);
+      
+      let errorMessage = 'Failed to update user role';
+      
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        errorMessage = err.response.data?.message || errorMessage;
+      } else if (err.request) {
+        // The request was made but no response was received
+        errorMessage = 'No response from server. Please check your connection.';
+      } else {
+        // Something happened in setting up the request
+        errorMessage = err.message || errorMessage;
+      }
+      
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     } finally {
       setDeleteLoading(prev => ({ ...prev, [userId]: false }));
     }
@@ -301,6 +203,7 @@ const AdminPage = () => {
   );
 
   const filteredAndSortedUsers = useMemo(() => {
+    
     const start = (currentPage - 1) * itemsPerPage;
     return filteredUsers.slice(start, start + itemsPerPage);
   }, [filteredUsers, currentPage, itemsPerPage]);
@@ -329,10 +232,29 @@ const AdminPage = () => {
     link.click();
     document.body.removeChild(link);
   };
+const [darkMode] = useState(false);
 
+useEffect(() => {
+  if (darkMode) {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+}, [darkMode]);
 
   return (
     <div className="admin-container">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       {loading && <div className="loading-container"><div className="spinner">Loading...</div></div>}
 
       {error && <div className="error-message" role="alert">{error}</div>}
@@ -387,6 +309,8 @@ const AdminPage = () => {
                 </thead>
                 <tbody>
                   {filteredAndSortedUsers.map(user => {
+                     console.log('User:', user.name, 'ID:', user._id.toString());
+  console.log('Uploads:', userUploads[user._id.toString()]);
                     const stats = {
                       totalUploads: user.totalUploads || 0,
                       successCount: user.successCount || 0,
@@ -408,27 +332,36 @@ const AdminPage = () => {
                             <div>Total Uploads: {stats.totalUploads}</div>
                           </div>
                         </td>
+
                         <td>
-                          {apiWorking ? (
-                            <button
-                              onClick={() => handleToggleRole(user._id, user.role)}
-                              className="toggle-btn"
-                              disabled={deleteLoading[user._id]}
+                          <div className="action-buttons">
+                            <button 
+                              className="action-btn view-uploads-btn"
+                              onClick={() => navigate(`/history/${user._id}`)}
                             >
-                              {deleteLoading[user._id] ? 'Updating...' : `Make ${user.role === 'admin' ? 'User' : 'Admin'}`}
+                              View Uploads
                             </button>
-                          ) : (
-                            <span className="text-muted" style={{ color: '#999' }}>
-                              Role change unavailable
-                            </span>
-                          )}
-                          <button
-                            onClick={() => handleDeleteUser(user._id)}
-                            disabled={deleteLoading[user._id]}
-                            className="delete-btn"
-                          >
-                            {deleteLoading[user._id] ? 'Deleting...' : 'Delete'}
-                          </button>
+                            {apiWorking ? (
+                              <button
+                                onClick={() => handleToggleRole(user._id, user.role)}
+                                className="action-btn toggle-btn"
+                                disabled={deleteLoading[user._id]}
+                              >
+                                {deleteLoading[user._id] ? 'Updating...' : `Make ${user.role === 'admin' ? 'User' : 'Admin'}`}
+                              </button>
+                            ) : (
+                              <span className="text-muted">
+                                Role change unavailable
+                              </span>
+                            )}
+                            <button
+                              onClick={() => handleDeleteUser(user._id)}
+                              disabled={deleteLoading[user._id]}
+                              className="action-btn delete-btn"
+                            >
+                              {deleteLoading[user._id] ? 'Deleting...' : 'Delete'}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

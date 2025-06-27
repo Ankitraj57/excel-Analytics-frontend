@@ -46,6 +46,7 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={['user', 'admin']} />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/history" element={<UploadHistory />} />
+            <Route path="/history/:userId" element={<UploadHistory />} />
             <Route path="/upload" element={<FileUpload />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/ai-insight/:fileId" element={<AIInsight />} />

@@ -14,11 +14,17 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('jwt');
     if (token) {
+      console.log('Adding token to request:', token.substring(0, 10) + '...');
       config.headers.Authorization = `Bearer ${token}`;
+    } else {
+      console.warn('No JWT token found in localStorage');
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('Error in request interceptor:', error);
+    return Promise.reject(error);
+  }
 );
 
 // Auth APIs

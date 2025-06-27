@@ -1,43 +1,82 @@
-import React from 'react';
-import {useNavigate } from 'react-router-dom';
-import '../styles/Home.css';
-const Home = () => {
-    const navigate = useNavigate();
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/Home.css";
 
-    const handleGetStarted = () => {
-        navigate("/login");
-    }
+const features = [
+  {
+    emoji: "📁",
+    title: "Excel File Upload",
+    description: "Upload .xls/.xlsx files and parse them using SheetJS for further analysis.",
+  },
+  {
+    emoji: "🔐",
+    title: "User/Admin Authentication",
+    description: "Secure JWT-based authentication to manage user access and roles effectively.",
+  },
+  {
+    emoji: "📊",
+    title: "2D/3D Chart Support",
+    description: "Render interactive charts using Chart.js and Three.js to visualize data beautifully.",
+  },
+  {
+    emoji: "📈",
+    title: "Dynamic Data Mapping",
+    description: "Allow users to choose X and Y axes from uploaded data dynamically.",
+  },
+  {
+    emoji: "📥",
+    title: "Downloadable Charts",
+    description: "Users can download visualizations in PNG or PDF format for reports or sharing.",
+  },
+  {
+    emoji: "💼",
+    title: "Dashboard with History",
+    description: "Track user uploads and previous analyses through a personalized dashboard.",
+  },
+  {
+    emoji: "🤖",
+    title: "AI Tools Integration",
+    description: "Integrate AI APIs (like OpenAI) to summarize data or generate smart insights.",
+  },
+  {
+    emoji: "🧩",
+    title: "Responsive UI",
+    description: "Modern, clean and fully responsive design for seamless experience on all devices.",
+  },
+];
+
+const Home = () => {
+  const navigate = useNavigate();
+  const handleGetStarted = () => navigate("/login");
+
   return (
     <div className="home-container">
-      <main className="hero-section">
-        <div className="hero-left">
-          <h2>Excel Analytics Platform</h2>
-          <p>
-            A powerful platform for uploading any Excel file (.xls or .xlsx), analyzing the data, and generating interactive 2D and 3D charts.
-          </p>
-          <ul>
-            <li>✅ Dynamic data visualization</li>
-            <li>✅ User & admin authentication</li>
-            <li>✅ Multiple chart types (2D/3D)</li>
-            <li>✅ Downloadable visualizations</li>
-          </ul>
-          <button className="get-started-btn" onClick={handleGetStarted}>Get Started</button>
-        </div>
+      <header className="hero-header">
+        <h1 className="hero-main-title">Excel Analytics Platform</h1>
+        <p className="hero-main-description">
+          A full-featured platform to upload Excel files, analyze them, and generate interactive 2D/3D charts with optional AI insights.
+        </p>
+        <button className="get-started-btn" onClick={handleGetStarted}>
+          Get Started
+        </button>
+      </header>
 
-        <div className="hero-right">
-          <h3>Powerful Data Analysis</h3>
-          <p>
-            Transform your Excel data into meaningful insights with our interactive visualization tools. Perfect for data analysts, business professionals, and students.
-          </p>
-          <div className="feature-grid">
-            <div className="feature-card">📊 Multiple Chart Types</div>
-            <div className="feature-card">📄 Excel Integration</div>
-            <div className="feature-card">⬇️ Export Options</div>
-            <div className="feature-card">🧠 AI Insights</div>
-          </div>
+      <section className="features-section">
+        <h2 className="section-title">Key Features</h2>
+        <div className="features-grid" aria-label="Sliding feature cards" tabIndex={0}>
+          {[...features, ...features].map((feature, idx) => (
+            <div
+              key={idx}
+              className="feature-card"
+              data-emoji={feature.emoji}
+              tabIndex={0}
+            >
+              <strong>{feature.title}</strong>
+              <p>{feature.description}</p>
+            </div>
+          ))}
         </div>
-      </main>
-
+      </section>
     </div>
   );
 };

@@ -10,36 +10,50 @@
   --transition: all 0.3s ease-in-out;
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-dark: rgba(255, 255, 255, 0.08);
+
+  /* Glassmorphism colors */
+  --glass-bg-light: rgba(255, 255, 255, 0.15);
+  --glass-bg-dark: rgba(18, 18, 18, 0.5);
+  --glass-border-light: rgba(255, 255, 255, 0.3);
+  --glass-border-dark: rgba(255, 255, 255, 0.1);
 }
 
 /* Themes */
 body.light {
-  background-color: var(--bg-light);
+  background: linear-gradient(135deg, #70e1f5, #ffd194);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
   color: var(--text-dark);
 }
 
 body.dark {
-  background-color: var(--bg-dark);
+  background: linear-gradient(135deg, #232526, #1c1c1c);
   color: var(--text-light);
 }
 
-/* Form Container */
+/* Form Container with glassmorphism and gradient border */
 .form-container {
-  background-color: var(--bg-light);
-  color: var(--text-dark);
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  border: 1.5px solid var(--glass-border-light);
   width: 100%;
   max-width: 460px;
   margin: 64px auto;
   padding: 48px 40px;
-  border-radius: 16px;
-  box-shadow: 0 12px 35px var(--shadow-light);
+  color: var(--text-dark);
   transition: var(--transition);
+   animation: slideDownFadeIn 1.5s ease forwards;
 }
 
 body.dark .form-container {
-  background-color: #222;
+  background: var(--glass-bg-dark);
+  border: 1.5px solid var(--glass-border-dark);
   color: var(--text-light);
-  box-shadow: 0 12px 35px var(--shadow-dark);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
 }
 
 /* Headings */
@@ -50,6 +64,7 @@ h2 {
   text-align: center;
   letter-spacing: 0.03em;
   user-select: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Form Layout */
@@ -65,50 +80,69 @@ h2 {
   flex-direction: column;
 }
 
-/* Inputs and Selects */
+/* Inputs and Selects with glass effect */
 .auth-form input,
 .auth-form select {
   padding: 14px 16px;
-  border-radius: 10px;
-  border: 1.8px solid #ccc;
+  border-radius: 12px;
+  border: 1.8px solid transparent;
   font-size: 1rem;
-  background-color: transparent;
+  background: rgba(255, 255, 255, 0.2);
   color: inherit;
   transition: var(--transition);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+body.dark .auth-form input,
+body.dark .auth-form select {
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .auth-form input::placeholder,
 .auth-form select::placeholder {
-  color: #aaa;
+  color: #ddd;
+  opacity: 0.8;
 }
 
 .auth-form input:focus,
 .auth-form select:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 8px 4px rgba(97, 218, 251, 0.3);
+  box-shadow: 0 0 16px 4px rgba(97, 218, 251, 0.4);
+  background: rgba(255, 255, 255, 0.3);
+  color: var(--text-dark);
 }
 
-/* Buttons */
+body.dark .auth-form input:focus,
+body.dark .auth-form select:focus {
+  background: rgba(50, 50, 50, 0.5);
+  color: var(--text-light);
+}
+
+/* Buttons with gradient and glass effect */
 .auth-form button {
   padding: 16px 0;
   font-size: 1.1rem;
   font-weight: 700;
   border: none;
-  border-radius: 12px;
-  background-color: var(--primary);
+  border-radius: 16px;
+  background: linear-gradient(135deg, #61dafb, #21a1f1);
   color: var(--text-dark);
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(97, 218, 251, 0.35);
+  box-shadow: 0 8px 24px rgba(33, 161, 241, 0.5);
   transition: var(--transition);
+  backdrop-filter: blur(6px);
 }
 
 .auth-form button:hover,
 .auth-form button:focus-visible {
-  background-color: var(--primary-hover);
-  box-shadow: 0 10px 24px rgba(33, 161, 241, 0.6);
+  background: linear-gradient(135deg, #21a1f1, #61dafb);
+  box-shadow: 0 12px 32px rgba(33, 161, 241, 0.7);
   outline: none;
+  transform: translateY(-2px);
 }
 
 .auth-form button:disabled {
@@ -116,27 +150,33 @@ h2 {
   cursor: not-allowed;
   opacity: 0.6;
   box-shadow: none;
+  transform: none;
 }
 
 /* Error & Success Messages */
 .error-message,
 .success-message {
   padding: 14px 18px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 0.95em;
   animation: fadeIn 0.4s ease forwards;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .error-message {
-  background-color: var(--error);
+  background-color: rgba(255, 77, 79, 0.85);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(255, 77, 79, 0.6);
+  box-shadow: 0 2px 10px rgba(255, 77, 79, 0.7);
 }
 
 .success-message {
-  background-color: var(--success);
+  background-color: rgba(76, 175, 80, 0.85);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.6);
+  box-shadow: 0 2px 10px rgba(76, 175, 80, 0.7);
 }
 
 /* Fade In Animation */
@@ -209,93 +249,24 @@ body.dark .spinner {
   }
 }
 
-/* Modal Overlay */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(6px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
+/* Slide down animation */
+@keyframes slideDownFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Modal Content */
-.modal-content {
-  background: var(--bg-light);
-  color: var(--text-dark);
-  padding: 2.5rem 2rem;
-  width: 100%;
-  max-width: 440px;
-  border-radius: 16px;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
-  transition: var(--transition);
+/* Apply animation to form container */
+.form-container {
+  /* existing styles... */
+  animation: slideDownFadeIn 0.6s ease forwards;
 }
 
-body.dark .modal-content {
-  background: #2c2c2c;
-  color: var(--text-light);
-  box-shadow: 0 14px 34px var(--shadow-dark);
-}
-
-/* Modal Heading */
-.modal-content h3 {
-  font-size: 1.7rem;
-  font-weight: 700;
-  margin-bottom: 1.4rem;
-}
-
-/* Modal Inputs */
-.modal-content input {
-  width: 100%;
-  padding: 13px 16px;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1.8px solid #ccc;
-  margin-bottom: 1.5rem;
-  background-color: transparent;
-  color: inherit;
-  transition: var(--transition);
-}
-
-.modal-content input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 8px 3px rgba(97, 218, 251, 0.4);
-  outline: none;
-}
-
-/* Modal Buttons */
-.modal-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-}
-
-.modal-buttons button {
-  padding: 0.6rem 1.3rem;
-  font-size: 1rem;
-  border-radius: 10px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  background-color: var(--primary);
-  color: var(--text-dark);
-  box-shadow: 0 8px 18px rgba(97, 218, 251, 0.45);
-  transition: var(--transition);
-}
-
-.modal-buttons button:hover {
-  background-color: var(--primary-hover);
-  box-shadow: 0 10px 26px rgba(33, 161, 241, 0.65);
-}
-
-.modal-buttons button[disabled] {
-  background-color: #aee5fc;
-  cursor: not-allowed;
-  box-shadow: none;
-  opacity: 0.6;
-}
 
 /* Responsive Tweaks */
 @media (max-width: 500px) {
@@ -308,8 +279,7 @@ body.dark .modal-content {
     font-size: 1.7rem;
   }
 
-  .auth-form button,
-  .modal-buttons button {
+  .auth-form button {
     width: 100%;
   }
 }

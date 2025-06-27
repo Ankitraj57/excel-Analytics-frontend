@@ -1,139 +1,269 @@
+/* General Layout */
 .home-container {
-  font-family: 'Segoe UI', sans-serif;
-  color: #222;
-  background-color: #f9f9f9;
-  padding: 2rem 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
+  padding: 2.5rem 2rem;
+  line-height: 1.6;
   min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Hero Section Layout */
-.hero-section {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  padding: 3rem 2rem;
+/* Hero Section */
+.hero-header {
+  text-align: center;
+  padding: 4rem 2rem 3rem;
+  background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
+  color: white;
+  border-radius: 24px;
+  box-shadow: 0 8px 20px rgba(0, 114, 255, 0.25);
+  margin-bottom: 3.5rem;
+  transform-style: preserve-3d;
+  animation: fadeInDown 1s ease forwards;
 }
 
-/* Hero Boxes */
-.hero-left,
-.hero-right {
+.hero-main-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hero-main-description {
+  font-size: 1.25rem;
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
+  opacity: 0.95;
+  letter-spacing: 0.03em;
+}
+
+/* Get Started Button */
+.get-started-btn {
+  background: white;
+  color: #0072ff;
+  border: none;
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0, 114, 255, 0.3);
+  transition: background-color 0.3s ease, transform 0.3s ease,
+    box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  outline-offset: 3px;
+}
+
+.get-started-btn:hover,
+.get-started-btn:focus-visible {
+  background-color: #0072ff;
+  color: white;
+  box-shadow: 0 8px 24px rgba(0, 114, 255, 0.7);
+  transform: translateY(-4px) scale(1.05);
+  outline: none;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: #222;
+  position: relative;
+  animation: fadeInUp 1s ease forwards;
+}
+
+/* Features Grid Sliding Container */
+.features-grid {
+  display: flex;
+  gap: 2rem;
+  width: max-content; /* container width adjusts to total cards */
+  margin: 0 auto;
+  overflow: hidden;
+  will-change: transform;
+  animation: slide-left-to-right 30s linear infinite;
+  user-select: none;
+}
+
+.features-grid:hover,
+.features-grid:focus-within {
+  animation-play-state: paused;
+}
+
+/* Sliding animation */
+@keyframes slide-left-to-right {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Feature Card */
+.feature-card {
+  flex: 0 0 340px;
   background: white;
   border-radius: 16px;
-  padding: 2rem;
-  width: 100%;
-  max-width: 460px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-}
-
-.hero-left:hover,
-.hero-right:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-/* Hero Text List */
-.hero-left ul {
-  list-style: none;
-  padding: 0;
-  line-height: 1.8;
-  font-size: 1rem;
-  color: #444;
-}
-
-.hero-left li::before {
-  content: '✓';
-  color: #067c59;
-  font-weight: bold;
-  margin-right: 0.6rem;
-}
-
-/* CTA Button */
-.get-started-btn {
-  background: linear-gradient(135deg, #067c59, #04aa74);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  margin-top: 1.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+  text-align: left;
+  color: #0072ff;
   font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(6, 124, 89, 0.3);
-  transition: background 0.3s ease, transform 0.2s ease;
+  font-size: 1.1rem;
+  cursor: default;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.5s ease, box-shadow 0.4s ease, background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  outline-offset: 4px;
 }
 
-.get-started-btn:hover {
-  background: linear-gradient(135deg, #05644d, #049d69);
-  transform: translateY(-2px);
+.feature-card strong {
+  display: block;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  color: #005bb5;
+  user-select: none;
 }
 
-/* Features Grid */
-.hero-right .feature-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.2rem;
-  margin-top: 1.5rem;
+.feature-card::before {
+  content: attr(data-emoji);
+  font-size: 2rem;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  opacity: 0.15;
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-/* Feature Cards */
-.feature-card {
-  background: #067c59;
-  color: white;
-  padding: 1.2rem;
-  border-radius: 10px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  font-weight: 500;
-}
-
-.feature-card:hover {
+.feature-card:hover,
+.feature-card:focus-within {
   transform: scale(1.05);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 32px rgba(0, 114, 255, 0.45);
+  background-color: #0072ff;
+  color: white;
+  outline: none;
 }
 
-/* 🌙 Dark Mode */
-body.dark .home-container {
-  background-color: #121212;
-  color: #e0e0e0;
+.feature-card:hover::before,
+.feature-card:focus-within::before {
+  opacity: 0.3;
 }
 
-body.dark .hero-left,
-body.dark .hero-right {
-  background: #1e1e2f;
-  color: #eee;
-  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.05);
+/* Keyboard Focus Styles */
+.get-started-btn:focus-visible {
+  outline: 3px solid #005cc5;
+  outline-offset: 4px;
 }
 
-body.dark .hero-left li::before {
-  color: #00e5ff;
+.feature-card:focus-visible {
+  outline: 3px solid #005cc5;
+  transform: scale(1.05);
+  background-color: #0072ff;
+  color: white;
+  box-shadow: 0 16px 32px rgba(0, 114, 255, 0.45);
 }
 
-body.dark .get-started-btn {
-  background: linear-gradient(135deg, #00bfa6, #00e5ff);
-  color: #121212;
-}
-
-body.dark .get-started-btn:hover {
-  background: linear-gradient(135deg, #00a896, #00ddee);
-}
-
-body.dark .feature-card {
-  background-color: #00bfa6;
-  color: #1e1e2f;
-}
-
-/* 📱 Responsive Tweaks */
+/* Responsive */
 @media (max-width: 768px) {
-  .hero-left,
-  .hero-right {
-    max-width: 100%;
-    padding: 1.5rem;
+  .hero-main-title {
+    font-size: 2.2rem;
+  }
+
+  .features-grid {
+    flex-wrap: wrap;
+    animation: none;
+    justify-content: center;
+    width: auto;
+  }
+
+  .feature-card {
+    flex: 1 1 100%;
+    max-width: 400px;
   }
 
   .get-started-btn {
-    width: 100%;
-    text-align: center;
+    padding: 12px 24px;
+    font-size: 1rem;
   }
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark Mode */
+body.dark .home-container {
+  background-color: #0d1117;
+  color: #c9d1d9;
+}
+
+body.dark .hero-header {
+  background: linear-gradient(90deg, #1f6feb 0%, #005cc5 100%);
+  box-shadow: 0 8px 20px rgba(31, 111, 235, 0.6);
+  color: #c9d1d9;
+}
+
+body.dark .hero-main-title,
+body.dark .hero-main-description {
+  text-shadow: none;
+  color: #c9d1d9;
+}
+
+body.dark .get-started-btn {
+  background: #c9d1d9;
+  color: #0d1117;
+  box-shadow: 0 6px 14px rgba(201, 209, 217, 0.6);
+}
+
+body.dark .get-started-btn:hover,
+body.dark .get-started-btn:focus-visible {
+  background-color: #0d1117;
+  color: #58a6ff;
+  box-shadow: 0 8px 24px rgba(88, 166, 255, 0.8);
+}
+
+body.dark .feature-card {
+  background-color: #161b22;
+  color: #58a6ff;
+  box-shadow: 0 0 0 1px #30363d;
+}
+
+body.dark .feature-card:hover,
+body.dark .feature-card:focus-within {
+  background-color: #2380f7;
+  color: white;
+  box-shadow: 0 16px 32px rgba(35, 128, 247, 0.7);
+}
+
+body.dark .feature-card::before {
+  color: rgba(88, 166, 255, 0.3);
+}
+
+body.dark .section-title {
+  color: #c9d1d9;
 }

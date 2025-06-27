@@ -6,8 +6,9 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 // 🔄 Thunk to fetch upload history
 export const getUploadHistory = createAsyncThunk(
   'uploadHistory/fetch',
-  async (_, thunkAPI) => {
+  async (params = {}, thunkAPI) => {
     const jwt = localStorage.getItem('jwt');
+    const { userId } = params;
 
     // ⛔ Prevent calling API with null jwt
     if (!jwt) {
@@ -15,7 +16,11 @@ export const getUploadHistory = createAsyncThunk(
     }
 
     try {
-      const response = await axios.get(`${API_URL}/files/history`, {
+      const url = userId 
+        ? `${API_URL}/files/history?userId=${userId}`
+        : `${API_URL}/files/history`;
+        
+      const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
@@ -23,7 +28,10 @@ export const getUploadHistory = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Upload history fetch failed');
+      const errorMessage = error.response?.data?.message || 
+                         error.message || 
+                         'Failed to fetch upload history. Please try again.';
+      return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );
